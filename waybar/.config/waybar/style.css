@@ -1,0 +1,96 @@
+@import "colors.css";
+
+* {
+    font-family: FiraCode Nerd Font;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+window#waybar {
+    background-color: rgba(30, 30, 46, 0.85);
+    color: white;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+#clock {
+    min-width: 140px;
+    color: white;
+    padding: 0px 10px;
+    border-radius: 4px;
+}
+
+tooltip {
+    background-color: @base;
+    border: 1px solid @blue;
+}
+
+tooltip label {
+    color: white;
+}
+
+#cpu,
+#memory,
+#pulseaudio,
+#tray,
+#mode,
+#idle_inhibitor {
+    padding: 0px 10px;
+    color: #ffffff;
+}
+
+#pulseaudio.muted {
+    background-color: @blue;
+    color: @crust;
+}
+
+#tray {
+    color: @blue;
+}
+
+#tray>.passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray>.needs-attention {
+    background-color: @blue;
+    color: @crust;
+}
+
+#idle_inhibitor.activated {
+    background-color: @blue; 
+    color: @crust;
+}
+
+#workspaces button {
+    padding: 5px 8px;
+    color: white;
+}
+
+#workspaces button:hover {
+    background-color: @blue;
+    color: white;
+}
+
+#workspaces button.focused {
+    background-color: @mauve;
+}
+
+#workspaces button.active {
+    border-bottom: 3px solid @blue;
+}
+
+#workspaces button.urgent {
+    background-color: @mauve;
+}
+
+label:focus {
+    background-color: @crust;
+}
