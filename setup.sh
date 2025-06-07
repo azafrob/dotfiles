@@ -6,6 +6,11 @@ sudo ./cachyos-repo.sh
 
 sudo pacman -Syu
 
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
 sudo pacman -S linux-cachyos cachyos-settings scx-scheds-git mesa-git mesa-utils
 
 sudo pacman -S git fish foot pulsemixer pamixer pavucontrol man-db tealdeer stow neovim downgrade
@@ -16,12 +21,6 @@ sudo pacman -S nerd-fonts
 
 sudo pacman -S snapper limine-snapper-sync limine-mkinitcpio-hook
 
-sudo pacman -S brave vesktop
+sudo pacman -S brave vesktop mangohud
 
 sudo pacman -S cachyos-gaming-meta
-
-sudo pacman -S --needed base-devel
-git clone https://aur.archlinux.org/paru.git
-cd paru
-makepkg -si
-cd .. && rm -rf paru
