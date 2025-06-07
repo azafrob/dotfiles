@@ -17,10 +17,11 @@ sudo pacman -S git fish foot pulsemixer pamixer pavucontrol man-db tealdeer stow
 
 sudo pacman -S nwg-look kvantum waybar rofi-wayland hyprpaper libnotify qt5ct qt6ct qt5-wayland qt6-wayland
 
-sudo pacman -S nerd-fonts
+sudo pacman -S nerd-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-liberation ttf-dejavu ttf-roboto
+yay -S ttf-symbola
 
 sudo pacman -S snapper limine-snapper-sync limine-mkinitcpio-hook
 
-sudo pacman -S brave vesktop mangohud
+sudo pacman -S brave discord mangohud
 
 sudo pacman -S cachyos-gaming-meta
