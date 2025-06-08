@@ -6,12 +6,7 @@ sudo ./cachyos-repo.sh
 
 sudo pacman -Syu
 
-sudo pacman -S --needed git base-devel
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-
-sudo pacman -S linux-cachyos cachyos-settings scx-scheds-git mesa-git mesa-utils
+sudo pacman -S linux-cachyos linux-cachyos-headers cachyos-settings scx-scheds-git mesa-git mesa-utils yay
 
 sudo pacman -S git fish foot pulsemixer pamixer pavucontrol man-db tealdeer stow neovim downgrade
 

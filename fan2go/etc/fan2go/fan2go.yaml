@@ -156,9 +156,9 @@ curves:
       # max: 110
       steps:
         - 60: 25
-        - 70: 100
-        - 80: 150
-        - 90: 200
+        - 70: 50
+        - 80: 100
+        - 90: 125
 
   - id: case_avg_curve
     function:
