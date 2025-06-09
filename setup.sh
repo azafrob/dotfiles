@@ -17,6 +17,6 @@ yay -S ttf-symbola
 
 sudo pacman -S snapper limine-snapper-sync limine-mkinitcpio-hook
 
-sudo pacman -S brave discord mangohud btop rocm-smi-lib
+sudo pacman -S firefox discord mangohud btop rocm-smi-lib
 
 sudo pacman -S cachyos-gaming-meta
