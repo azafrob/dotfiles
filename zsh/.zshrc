@@ -89,10 +89,10 @@ setopt interactive_comments      # Allow comments even in interactive shells.
 
 alias l='ls -Ah --group-directories-first'
 alias md='mkdir -p'
-alias dl='trash-put'
+#alias dl='trash-put'
 alias a='7z'
 alias g='git'
-
+alias slssteam='LD_AUDIT="/home/vee/Downloads/SLSsteam/bin/SLSsteam.so" nohup steam >/dev/null 2>&1 &'
 
 # Functions ----------------------------------------------------------------------------------------
 
