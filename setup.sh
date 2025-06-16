@@ -6,9 +6,9 @@ sudo ./cachyos-repo.sh
 
 sudo pacman -Syu
 
-sudo pacman -S linux-cachyos linux-cachyos-headers cachyos-settings scx-scheds-git mesa-git mesa-utils yay
+sudo pacman -S linux-cachyos linux-cachyos-headers cachyos-settings scx-scheds-git mesa-git mesa-utils yay power-profiles-daemon
 
-sudo pacman -S git fish foot pulsemixer pamixer pavucontrol man-db tealdeer stow neovim downgrade
+sudo pacman -S git fish fisher foot pulsemixer pamixer pavucontrol man-db tealdeer stow neovim downgrade bat fzf zoxide eza ripgrep fd fastfetch
 
 sudo pacman -S nwg-look kvantum waybar rofi-wayland hyprpaper libnotify qt5ct qt6ct qt5-wayland qt6-wayland
 
@@ -20,3 +20,5 @@ sudo pacman -S snapper limine-snapper-sync limine-mkinitcpio-hook
 sudo pacman -S firefox mangohud btop rocm-smi-lib
 
 sudo pacman -S cachyos-gaming-meta
+
+systemctl disable --now ananicy-cpp
