@@ -18,7 +18,7 @@ sudo pacman -S firefox mangohud btop rocm-smi-lib
 
 sudo pacman -S cachyos-gaming-meta cachyos-gaming-applications gamemode
 
-yay -S fan2go-git lact-git
+yay -S fan2go-git lact-git bibata-cursor-theme
 
 systemctl disable --now ananicy-cpp
 
