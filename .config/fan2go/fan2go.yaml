@@ -1,0 +1,77 @@
+# The path of the database file
+dbPath: "/etc/fan2go/fan2go.db"
+
+# Allow the fan initialization sequence to run in parallel for all configured fans
+runFanInitializationInParallel: true
+
+# A list of fans to control
+fans:
+  - id: cpu
+    hwmon:
+      # The platform of the controller which is
+      # connected to this fan (see sensor.platform below)
+      platform: nct6799-isa-0290
+      # The channel of this fan's RPM sensor as displayed by `fan2go detect`
+      rpmChannel: 1
+      # The pwm channel that controls this fan; fan2go defaults to same channel number as fan RPM
+      # pwmChannel: 1
+    neverStop: true
+    curve: cpu_curve
+
+  - id: in_bottom
+    hwmon:
+      platform: nct6799-isa-0290
+      rpmChannel: 4
+    neverStop: true
+    curve: gpu_curve
+
+  - id: out_top
+    hwmon:
+      platform: nct6799-isa-0290
+      rpmChannel: 2
+    neverStop: true
+    curve: gpu_curve
+
+sensors:
+  - id: cpu_die
+    hwmon:
+      platform: k10temp-pci-00c3
+      # The index of this sensor as displayed by `fan2go detect`
+      index: 1
+
+  - id: gpu_memory
+    hwmon:
+      platform: amdgpu-pci-0300
+      index: 3
+
+curves:
+  - id: cpu_curve
+    # The type of curve configuration, one of: linear | function
+    linear:
+      sensor: cpu_die
+      steps:
+        # Sensor value (degrees Celsius) -> Speed (0-255)
+        - 40: 25
+        - 50: 50
+        - 60: 75
+        - 70: 100
+        - 80: 125
+        - 90: 150
+
+  - id: gpu_curve
+    linear:
+      sensor: gpu_memory
+      steps:
+        - 60: 25
+        - 70: 50
+        - 80: 100
+        - 90: 125
+
+  - id: case_avg_curve
+    function:
+      # Type of aggregation function to use, on of: minimum | maximum | average | delta | sum | difference
+      type: average
+      # A list of curve IDs to use
+      curves:
+        - cpu_curve
+        - gpu_curve

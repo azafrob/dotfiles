@@ -6,19 +6,19 @@ sudo ./cachyos-repo.sh
 
 sudo pacman -Syu
 
-sudo pacman -S linux-cachyos linux-cachyos-headers cachyos-settings scx-scheds-git mesa-git mesa-utils yay power-profiles-daemon limine-entry-tool xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
+sudo pacman -S linux-cachyos linux-cachyos-headers cachyos-settings scx-scheds-git mesa-git mesa-utils yay power-profiles-daemon limine-entry-tool xdg-desktop-portal-hyprland xdg-desktop-portal-gtk cachyos-rate-mirrors
 
-sudo pacman -S git fish ghostty man-db tealdeer stow neovim downgrade bat fzf zoxide eza ripgrep fd fastfetch atool flatpak timeshift yazi
+sudo pacman -S git fish ghostty man-db tealdeer stow neovim downgrade bat fzf zoxide eza ripgrep fd fastfetch atool flatpak timeshift yazi brightnessctl
 
-sudo pacman -S nwg-look kvantum waybar hyprpaper dunst wofi libnotify qt6ct catppuccin-gtk-theme-mocha
+sudo pacman -S nwg-look kvantum waybar hyprpaper dunst wofi libnotify qt6ct hyprlock hypridle
 
 sudo pacman -S nerd-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra
 
-sudo pacman -S firefox mangohud btop rocm-smi-lib
+sudo pacman -S firefox mangohud btop rocm-smi-lib thunar papirus-icon-theme
 
 sudo pacman -S cachyos-gaming-meta cachyos-gaming-applications gamemode
 
-yay -S fan2go-git lact-git bibata-cursor-theme
+yay -S fan2go-git lact-git bibata-cursor-theme catppuccin-gtk-theme-mocha
 
 systemctl disable --now ananicy-cpp
 
@@ -28,4 +28,4 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 
 tldr --update
 
-git clone https://github.com/catppuccin/Kvantum.git
+sudo limine-entry-tool --scan
