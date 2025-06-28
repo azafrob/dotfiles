@@ -1,120 +1,120 @@
-[2025-06-28 01:11:06.252]: Info: Sunshine version: v2025.626.210050
-[2025-06-28 01:11:06.253]: Info: Package Publisher: LizardByte
-[2025-06-28 01:11:06.253]: Info: Publisher Website: https://app.lizardbyte.dev
-[2025-06-28 01:11:06.253]: Info: Get support: https://app.lizardbyte.dev/support
-[2025-06-28 01:11:06.255]: Error: Couldn't load cuda: -1
-[2025-06-28 01:11:06.255]: Info: Found display [wayland-1]
-[2025-06-28 01:11:06.257]: Info: Found interface: zxdg_output_manager_v1(9) version 3
-[2025-06-28 01:11:06.257]: Info: Found interface: zwlr_screencopy_manager_v1(41) version 3
-[2025-06-28 01:11:06.257]: Info: Found interface: zwp_linux_dmabuf_v1(57) version 5
-[2025-06-28 01:11:06.257]: Info: Found interface: wl_output(58) version 4
-[2025-06-28 01:11:06.257]: Info: Resolution: 3440x1440
-[2025-06-28 01:11:06.257]: Info: Name: DP-1
-[2025-06-28 01:11:06.257]: Info: Found monitor: Xiaomi Corporation Mi Monitor  (DP-1)
-[2025-06-28 01:11:06.257]: Info: Offset: 0x0
-[2025-06-28 01:11:06.257]: Info: Logical size: 3440x1440
-[2025-06-28 01:11:06.257]: Info: -------- Start of Wayland monitor list --------
-[2025-06-28 01:11:06.257]: Info: Monitor 0 is DP-1: Xiaomi Corporation Mi Monitor  (DP-1)
-[2025-06-28 01:11:06.257]: Info: --------- End of Wayland monitor list ---------
-[2025-06-28 01:11:06.276]: Warning: Gamepad ds5 is disabled due to Permission denied
-[2025-06-28 01:11:06.276]: Info: // Testing for available encoders, this may generate errors. You can safely ignore those errors. //
-[2025-06-28 01:11:06.276]: Info: Trying encoder [nvenc]
-[2025-06-28 01:11:06.276]: Info: Screencasting with Wayland's protocol
-[2025-06-28 01:11:06.276]: Info: Found display [wayland-1]
-[2025-06-28 01:11:06.276]: Info: Found interface: zxdg_output_manager_v1(9) version 3
-[2025-06-28 01:11:06.276]: Info: Found interface: zwlr_screencopy_manager_v1(41) version 3
-[2025-06-28 01:11:06.276]: Info: Found interface: zwp_linux_dmabuf_v1(57) version 5
-[2025-06-28 01:11:06.276]: Info: Found interface: wl_output(58) version 4
-[2025-06-28 01:11:06.277]: Info: Resolution: 3440x1440
-[2025-06-28 01:11:06.277]: Info: Name: DP-1
-[2025-06-28 01:11:06.277]: Info: Found monitor: Xiaomi Corporation Mi Monitor  (DP-1)
-[2025-06-28 01:11:06.277]: Info: Offset: 0x0
-[2025-06-28 01:11:06.277]: Info: Logical size: 3440x1440
-[2025-06-28 01:11:06.277]: Info: Selected monitor [Xiaomi Corporation Mi Monitor  (DP-1)] for streaming
-[2025-06-28 01:11:06.277]: Info: Creating encoder [h264_nvenc]
-[2025-06-28 01:11:06.277]: Info: Color coding: SDR (Rec. 601)
-[2025-06-28 01:11:06.277]: Info: Color depth: 8-bit
-[2025-06-28 01:11:06.277]: Info: Color range: JPEG
-[2025-06-28 01:11:06.277]: Error: Couldn't load cuda: -1
-[2025-06-28 01:11:06.277]: Info: Creating encoder [h264_nvenc]
-[2025-06-28 01:11:06.277]: Info: Color coding: SDR (Rec. 601)
-[2025-06-28 01:11:06.277]: Info: Color depth: 8-bit
-[2025-06-28 01:11:06.277]: Info: Color range: JPEG
-[2025-06-28 01:11:06.277]: Error: Couldn't load cuda: -1
-[2025-06-28 01:11:06.277]: Info: Encoder [nvenc] failed
-[2025-06-28 01:11:06.277]: Info: Trying encoder [vaapi]
-[2025-06-28 01:11:06.277]: Info: Screencasting with Wayland's protocol
-[2025-06-28 01:11:06.277]: Info: Found display [wayland-1]
-[2025-06-28 01:11:06.277]: Info: Found interface: zxdg_output_manager_v1(9) version 3
-[2025-06-28 01:11:06.277]: Info: Found interface: zwlr_screencopy_manager_v1(41) version 3
-[2025-06-28 01:11:06.277]: Info: Found interface: zwp_linux_dmabuf_v1(57) version 5
-[2025-06-28 01:11:06.277]: Info: Found interface: wl_output(58) version 4
-[2025-06-28 01:11:06.277]: Info: Resolution: 3440x1440
-[2025-06-28 01:11:06.277]: Info: Name: DP-1
-[2025-06-28 01:11:06.277]: Info: Found monitor: Xiaomi Corporation Mi Monitor  (DP-1)
-[2025-06-28 01:11:06.277]: Info: Offset: 0x0
-[2025-06-28 01:11:06.277]: Info: Logical size: 3440x1440
-[2025-06-28 01:11:06.277]: Info: Selected monitor [Xiaomi Corporation Mi Monitor  (DP-1)] for streaming
-[2025-06-28 01:11:06.277]: Info: Creating encoder [h264_vaapi]
-[2025-06-28 01:11:06.277]: Info: Color coding: SDR (Rec. 601)
-[2025-06-28 01:11:06.277]: Info: Color depth: 8-bit
-[2025-06-28 01:11:06.277]: Info: Color range: JPEG
-[2025-06-28 01:11:06.298]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.3-arch1-1)
-[2025-06-28 01:11:06.299]: Info: Streaming bitrate is 1000000
-[2025-06-28 01:11:06.299]: Info: Using normal encoding mode
-[2025-06-28 01:11:06.299]: Info: Using default rate control
-[2025-06-28 01:11:06.313]: Info: System tray created
-[2025-06-28 01:11:06.322]: Info: Creating encoder [hevc_vaapi]
-[2025-06-28 01:11:06.322]: Info: Color coding: SDR (Rec. 601)
-[2025-06-28 01:11:06.322]: Info: Color depth: 8-bit
-[2025-06-28 01:11:06.322]: Info: Color range: JPEG
-[2025-06-28 01:11:06.331]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.3-arch1-1)
-[2025-06-28 01:11:06.331]: Info: Streaming bitrate is 1000000
-[2025-06-28 01:11:06.331]: Info: Using normal encoding mode
-[2025-06-28 01:11:06.331]: Info: Using default rate control
-[2025-06-28 01:11:06.346]: Info: Creating encoder [av1_vaapi]
-[2025-06-28 01:11:06.346]: Info: Color coding: SDR (Rec. 601)
-[2025-06-28 01:11:06.346]: Info: Color depth: 8-bit
-[2025-06-28 01:11:06.346]: Info: Color range: JPEG
-[2025-06-28 01:11:06.353]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.3-arch1-1)
-[2025-06-28 01:11:06.354]: Info: Streaming bitrate is 1000000
-[2025-06-28 01:11:06.354]: Info: Using normal encoding mode
-[2025-06-28 01:11:06.354]: Info: Using VBR with single frame VBV size
-[2025-06-28 01:11:06.354]: Warning: [av1_vaapi @ 0x55ba1fe16bc0] Multiple slices were requested but this codec does not support controlling slices.
-[2025-06-28 01:11:06.364]: Info: Screencasting with Wayland's protocol
-[2025-06-28 01:11:06.364]: Info: Found display [wayland-1]
-[2025-06-28 01:11:06.364]: Info: Found interface: zxdg_output_manager_v1(9) version 3
-[2025-06-28 01:11:06.364]: Info: Found interface: zwlr_screencopy_manager_v1(41) version 3
-[2025-06-28 01:11:06.364]: Info: Found interface: zwp_linux_dmabuf_v1(57) version 5
-[2025-06-28 01:11:06.364]: Info: Found interface: wl_output(58) version 4
-[2025-06-28 01:11:06.364]: Info: Resolution: 3440x1440
-[2025-06-28 01:11:06.364]: Info: Name: DP-1
-[2025-06-28 01:11:06.364]: Info: Found monitor: Xiaomi Corporation Mi Monitor  (DP-1)
-[2025-06-28 01:11:06.364]: Info: Offset: 0x0
-[2025-06-28 01:11:06.364]: Info: Logical size: 3440x1440
-[2025-06-28 01:11:06.364]: Info: Selected monitor [Xiaomi Corporation Mi Monitor  (DP-1)] for streaming
-[2025-06-28 01:11:06.364]: Info: Creating encoder [hevc_vaapi]
-[2025-06-28 01:11:06.364]: Info: Color coding: SDR (Rec. 709)
-[2025-06-28 01:11:06.364]: Info: Color depth: 10-bit
-[2025-06-28 01:11:06.364]: Info: Color range: JPEG
-[2025-06-28 01:11:06.372]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.3-arch1-1)
-[2025-06-28 01:11:06.374]: Info: Streaming bitrate is 1000000
-[2025-06-28 01:11:06.374]: Info: Using normal encoding mode
-[2025-06-28 01:11:06.374]: Info: Using default rate control
-[2025-06-28 01:11:06.387]: Info: Creating encoder [av1_vaapi]
-[2025-06-28 01:11:06.387]: Info: Color coding: SDR (Rec. 709)
-[2025-06-28 01:11:06.387]: Info: Color depth: 10-bit
-[2025-06-28 01:11:06.387]: Info: Color range: JPEG
-[2025-06-28 01:11:06.394]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.3-arch1-1)
-[2025-06-28 01:11:06.395]: Info: Streaming bitrate is 1000000
-[2025-06-28 01:11:06.395]: Info: Using normal encoding mode
-[2025-06-28 01:11:06.395]: Info: Using VBR with single frame VBV size
-[2025-06-28 01:11:06.395]: Warning: [av1_vaapi @ 0x55ba1fe16bc0] Multiple slices were requested but this codec does not support controlling slices.
-[2025-06-28 01:11:06.406]: Info: 
-[2025-06-28 01:11:06.406]: Info: // Ignore any errors mentioned above, they are not relevant. //
-[2025-06-28 01:11:06.406]: Info: 
-[2025-06-28 01:11:06.406]: Info: Found H.264 encoder: h264_vaapi [vaapi]
-[2025-06-28 01:11:06.406]: Info: Found HEVC encoder: hevc_vaapi [vaapi]
-[2025-06-28 01:11:06.406]: Info: Found AV1 encoder: av1_vaapi [vaapi]
-[2025-06-28 01:11:06.408]: Error: Failed to create client: Daemon not running
-[2025-06-28 01:11:06.409]: Info: Configuration UI available at [https://localhost:47990]
+[2025-06-28 03:14:36.755]: Info: Sunshine version: v2025.626.210050
+[2025-06-28 03:14:36.755]: Info: Package Publisher: LizardByte
+[2025-06-28 03:14:36.755]: Info: Publisher Website: https://app.lizardbyte.dev
+[2025-06-28 03:14:36.755]: Info: Get support: https://app.lizardbyte.dev/support
+[2025-06-28 03:14:36.757]: Error: Couldn't load cuda: -1
+[2025-06-28 03:14:36.757]: Info: Found display [wayland-1]
+[2025-06-28 03:14:36.757]: Info: Found interface: zxdg_output_manager_v1(9) version 3
+[2025-06-28 03:14:36.757]: Info: Found interface: zwlr_screencopy_manager_v1(41) version 3
+[2025-06-28 03:14:36.757]: Info: Found interface: zwp_linux_dmabuf_v1(57) version 5
+[2025-06-28 03:14:36.757]: Info: Found interface: wl_output(58) version 4
+[2025-06-28 03:14:36.757]: Info: Resolution: 3440x1440
+[2025-06-28 03:14:36.757]: Info: Name: DP-1
+[2025-06-28 03:14:36.757]: Info: Found monitor: Xiaomi Corporation Mi Monitor  (DP-1)
+[2025-06-28 03:14:36.757]: Info: Offset: 0x0
+[2025-06-28 03:14:36.757]: Info: Logical size: 3440x1440
+[2025-06-28 03:14:36.757]: Info: -------- Start of Wayland monitor list --------
+[2025-06-28 03:14:36.757]: Info: Monitor 0 is DP-1: Xiaomi Corporation Mi Monitor  (DP-1)
+[2025-06-28 03:14:36.757]: Info: --------- End of Wayland monitor list ---------
+[2025-06-28 03:14:36.777]: Warning: Gamepad ds5 is disabled due to Permission denied
+[2025-06-28 03:14:36.777]: Info: // Testing for available encoders, this may generate errors. You can safely ignore those errors. //
+[2025-06-28 03:14:36.777]: Info: Trying encoder [nvenc]
+[2025-06-28 03:14:36.777]: Info: Screencasting with Wayland's protocol
+[2025-06-28 03:14:36.777]: Info: Found display [wayland-1]
+[2025-06-28 03:14:36.777]: Info: Found interface: zxdg_output_manager_v1(9) version 3
+[2025-06-28 03:14:36.777]: Info: Found interface: zwlr_screencopy_manager_v1(41) version 3
+[2025-06-28 03:14:36.777]: Info: Found interface: zwp_linux_dmabuf_v1(57) version 5
+[2025-06-28 03:14:36.777]: Info: Found interface: wl_output(58) version 4
+[2025-06-28 03:14:36.777]: Info: Resolution: 3440x1440
+[2025-06-28 03:14:36.777]: Info: Name: DP-1
+[2025-06-28 03:14:36.777]: Info: Found monitor: Xiaomi Corporation Mi Monitor  (DP-1)
+[2025-06-28 03:14:36.777]: Info: Offset: 0x0
+[2025-06-28 03:14:36.777]: Info: Logical size: 3440x1440
+[2025-06-28 03:14:36.777]: Info: Selected monitor [Xiaomi Corporation Mi Monitor  (DP-1)] for streaming
+[2025-06-28 03:14:36.777]: Info: Creating encoder [h264_nvenc]
+[2025-06-28 03:14:36.777]: Info: Color coding: SDR (Rec. 601)
+[2025-06-28 03:14:36.778]: Info: Color depth: 8-bit
+[2025-06-28 03:14:36.778]: Info: Color range: JPEG
+[2025-06-28 03:14:36.778]: Error: Couldn't load cuda: -1
+[2025-06-28 03:14:36.778]: Info: Creating encoder [h264_nvenc]
+[2025-06-28 03:14:36.778]: Info: Color coding: SDR (Rec. 601)
+[2025-06-28 03:14:36.778]: Info: Color depth: 8-bit
+[2025-06-28 03:14:36.778]: Info: Color range: JPEG
+[2025-06-28 03:14:36.778]: Error: Couldn't load cuda: -1
+[2025-06-28 03:14:36.778]: Info: Encoder [nvenc] failed
+[2025-06-28 03:14:36.778]: Info: Trying encoder [vaapi]
+[2025-06-28 03:14:36.778]: Info: Screencasting with Wayland's protocol
+[2025-06-28 03:14:36.778]: Info: Found display [wayland-1]
+[2025-06-28 03:14:36.778]: Info: Found interface: zxdg_output_manager_v1(9) version 3
+[2025-06-28 03:14:36.778]: Info: Found interface: zwlr_screencopy_manager_v1(41) version 3
+[2025-06-28 03:14:36.778]: Info: Found interface: zwp_linux_dmabuf_v1(57) version 5
+[2025-06-28 03:14:36.778]: Info: Found interface: wl_output(58) version 4
+[2025-06-28 03:14:36.778]: Info: Resolution: 3440x1440
+[2025-06-28 03:14:36.778]: Info: Name: DP-1
+[2025-06-28 03:14:36.778]: Info: Found monitor: Xiaomi Corporation Mi Monitor  (DP-1)
+[2025-06-28 03:14:36.778]: Info: Offset: 0x0
+[2025-06-28 03:14:36.778]: Info: Logical size: 3440x1440
+[2025-06-28 03:14:36.778]: Info: Selected monitor [Xiaomi Corporation Mi Monitor  (DP-1)] for streaming
+[2025-06-28 03:14:36.778]: Info: Creating encoder [h264_vaapi]
+[2025-06-28 03:14:36.778]: Info: Color coding: SDR (Rec. 601)
+[2025-06-28 03:14:36.778]: Info: Color depth: 8-bit
+[2025-06-28 03:14:36.778]: Info: Color range: JPEG
+[2025-06-28 03:14:36.800]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.4-3-cachyos)
+[2025-06-28 03:14:36.801]: Info: Streaming bitrate is 1000000
+[2025-06-28 03:14:36.801]: Info: Using normal encoding mode
+[2025-06-28 03:14:36.801]: Info: Using default rate control
+[2025-06-28 03:14:36.817]: Info: System tray created
+[2025-06-28 03:14:36.822]: Info: Creating encoder [hevc_vaapi]
+[2025-06-28 03:14:36.822]: Info: Color coding: SDR (Rec. 601)
+[2025-06-28 03:14:36.822]: Info: Color depth: 8-bit
+[2025-06-28 03:14:36.822]: Info: Color range: JPEG
+[2025-06-28 03:14:36.830]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.4-3-cachyos)
+[2025-06-28 03:14:36.831]: Info: Streaming bitrate is 1000000
+[2025-06-28 03:14:36.831]: Info: Using normal encoding mode
+[2025-06-28 03:14:36.831]: Info: Using default rate control
+[2025-06-28 03:14:36.845]: Info: Creating encoder [av1_vaapi]
+[2025-06-28 03:14:36.845]: Info: Color coding: SDR (Rec. 601)
+[2025-06-28 03:14:36.845]: Info: Color depth: 8-bit
+[2025-06-28 03:14:36.845]: Info: Color range: JPEG
+[2025-06-28 03:14:36.852]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.4-3-cachyos)
+[2025-06-28 03:14:36.852]: Info: Streaming bitrate is 1000000
+[2025-06-28 03:14:36.852]: Info: Using normal encoding mode
+[2025-06-28 03:14:36.852]: Info: Using VBR with single frame VBV size
+[2025-06-28 03:14:36.852]: Warning: [av1_vaapi @ 0x55acabc97f00] Multiple slices were requested but this codec does not support controlling slices.
+[2025-06-28 03:14:36.864]: Info: Screencasting with Wayland's protocol
+[2025-06-28 03:14:36.864]: Info: Found display [wayland-1]
+[2025-06-28 03:14:36.864]: Info: Found interface: zxdg_output_manager_v1(9) version 3
+[2025-06-28 03:14:36.864]: Info: Found interface: zwlr_screencopy_manager_v1(41) version 3
+[2025-06-28 03:14:36.864]: Info: Found interface: zwp_linux_dmabuf_v1(57) version 5
+[2025-06-28 03:14:36.864]: Info: Found interface: wl_output(58) version 4
+[2025-06-28 03:14:36.864]: Info: Resolution: 3440x1440
+[2025-06-28 03:14:36.864]: Info: Name: DP-1
+[2025-06-28 03:14:36.864]: Info: Found monitor: Xiaomi Corporation Mi Monitor  (DP-1)
+[2025-06-28 03:14:36.864]: Info: Offset: 0x0
+[2025-06-28 03:14:36.864]: Info: Logical size: 3440x1440
+[2025-06-28 03:14:36.864]: Info: Selected monitor [Xiaomi Corporation Mi Monitor  (DP-1)] for streaming
+[2025-06-28 03:14:36.864]: Info: Creating encoder [hevc_vaapi]
+[2025-06-28 03:14:36.864]: Info: Color coding: SDR (Rec. 709)
+[2025-06-28 03:14:36.864]: Info: Color depth: 10-bit
+[2025-06-28 03:14:36.864]: Info: Color range: JPEG
+[2025-06-28 03:14:36.872]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.4-3-cachyos)
+[2025-06-28 03:14:36.874]: Info: Streaming bitrate is 1000000
+[2025-06-28 03:14:36.874]: Info: Using normal encoding mode
+[2025-06-28 03:14:36.874]: Info: Using default rate control
+[2025-06-28 03:14:36.886]: Info: Creating encoder [av1_vaapi]
+[2025-06-28 03:14:36.886]: Info: Color coding: SDR (Rec. 709)
+[2025-06-28 03:14:36.886]: Info: Color depth: 10-bit
+[2025-06-28 03:14:36.886]: Info: Color range: JPEG
+[2025-06-28 03:14:36.893]: Info: vaapi vendor: Mesa Gallium driver 25.2.0-devel for AMD Radeon RX 9070 XT (radeonsi, gfx1201, LLVM 20.1.6, DRM 3.63, 6.15.4-3-cachyos)
+[2025-06-28 03:14:36.894]: Info: Streaming bitrate is 1000000
+[2025-06-28 03:14:36.894]: Info: Using normal encoding mode
+[2025-06-28 03:14:36.894]: Info: Using VBR with single frame VBV size
+[2025-06-28 03:14:36.894]: Warning: [av1_vaapi @ 0x55acabc97f00] Multiple slices were requested but this codec does not support controlling slices.
+[2025-06-28 03:14:36.905]: Info: 
+[2025-06-28 03:14:36.905]: Info: // Ignore any errors mentioned above, they are not relevant. //
+[2025-06-28 03:14:36.905]: Info: 
+[2025-06-28 03:14:36.905]: Info: Found H.264 encoder: h264_vaapi [vaapi]
+[2025-06-28 03:14:36.905]: Info: Found HEVC encoder: hevc_vaapi [vaapi]
+[2025-06-28 03:14:36.905]: Info: Found AV1 encoder: av1_vaapi [vaapi]
+[2025-06-28 03:14:36.906]: Error: Failed to create client: Daemon not running
+[2025-06-28 03:14:36.907]: Info: Configuration UI available at [https://localhost:47990]

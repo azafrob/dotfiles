@@ -24,6 +24,12 @@ sudo pacman -S lizardbyte-beta/sunshine-git
 
 yay -S fan2go-git lact-git bibata-cursor-theme catppuccin-gtk-theme-mocha
 
+yay -S zenergy-dkms-git
+
+echo "options amdgpu ppfeaturemask=0xFFF7FFFF" | sudo tee /etc/modprobe.d/99-amdgpu-overdrive.conf"
+
+echo "nct6775" | sudo tee /etc/modules-load.d/custom_modules.conf
+
 echo -e 'default_sched = "scx_lavd"\ndefault_mode = "Auto"' | sudo tee /etc/scx_loader.toml
 
 systemctl disable --now ananicy-cpp
