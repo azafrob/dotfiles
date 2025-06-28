@@ -1,0 +1,5 @@
+--target=$HOME
+--ignore=setup.sh
+--ignore=nixos-config
+--ignore=.stowrc
+--ignore=.stow-local-ignore

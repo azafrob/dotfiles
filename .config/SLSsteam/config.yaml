@@ -24,10 +24,11 @@ AutoFilterList: yes
 AppIds:
 
 #Enables playing of not owned games. Respects black-/whitelist AppIds
-PlayNotOwnedGames: no
+PlayNotOwnedGames: yes
 
 #Additional AppIds to inject (Overrides your black-/whitelist & also overrides OwnerIds for apps you got shared!) Best to use this only on games NOT in your library.
 AdditionalApps:
+  - 960090
 
 #Extra Data for Dlcs belonging to a specific AppId. Only needed
 #when the App you're playing is hit by Steams 64 DLC limit
