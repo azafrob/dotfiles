@@ -51,12 +51,12 @@ curves:
       sensor: cpu_die
       steps:
         # Sensor value (degrees Celsius) -> Speed (0-255)
-        - 40: 25
-        - 50: 50
-        - 60: 75
-        - 70: 100
-        - 80: 125
-        - 90: 150
+        - 40: 50
+        - 50: 75
+        - 60: 100
+        - 70: 125
+        - 80: 150
+        - 90: 200
 
   - id: gpu_curve
     linear:

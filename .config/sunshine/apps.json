@@ -25,8 +25,8 @@
             "name": "Steam Big Picture",
             "prep-cmd": [
                 {
-                    "do": "hyprctl output create headless SUNSHINE",
-                    "undo": "hyprctl output remove SUNSHINE"
+                    "do": "sh -c \"hyprctl output create headless SUNSHINE-${SUNSHINE_CLIENT_HEIGHT}\"",
+                    "undo": "sh -c \"hyprctl output remove SUNSHINE-${SUNSHINE_CLIENT_HEIGHT}\""
                 },
                 {
                     "do": "hyprctl keyword monitor DP-1,disable",
