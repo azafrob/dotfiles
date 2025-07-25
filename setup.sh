@@ -121,8 +121,8 @@ install_main_packages() {
         unrar
         yay
         firefox
-	    wine
-	    pavucontrol
+	wine
+	pavucontrol
 
         # Theming
         kvantum
