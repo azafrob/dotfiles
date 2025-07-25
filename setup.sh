@@ -89,6 +89,8 @@ install_main_packages() {
         scx-scheds-git
         mesa-git
         limine-mkinitcpio-hook
+	limine-snapper-sync
+	snap-pac
         xdg-desktop-portal-gtk
 
         # System utilities
@@ -162,7 +164,7 @@ install_hyprland_packages() {
     )
 
     if ! sudo pacman -S --needed "${hyprland_packages[@]}"; then
-        log_warning "Some Hyprland packages failed to install"
+        log_warning "Some Hyprland packa/ges failed to install"
     else
         log_success "Hyprland packages installed successfully"
     fi
@@ -183,6 +185,7 @@ install_aur_packages() {
         gamemode-git
         mangohud-git
         qt6ct-kde
+	journalctl-desktop-notification
         arkenfox-user.js
     )
 
@@ -253,17 +256,27 @@ setup_sunshine() {
 configure_system() {
     log_info "Configuring system settings..."
 
+    cd ~/dotfiles
+
     # Motherboard fan controller module
     log_info "Adding motherboard fan controller module..."
     echo "nct6775" | sudo tee "/etc/modules-load.d/custom_modules.conf" > /dev/null
 
+    # Enable limine-snapper-sync
+    log_info "Enabling limine-snapper-sync"
+    sudo systemctl enable --now limine-snapper-sync.service || log_warning "Failed to enable limine-snapper-sync daemon"
+
+    # Enable journalctl-desktop-notification
+    log_info "Enabling journalctl-desktop-notification"
+    systemctl enable --now journalctl-desktop-notification.service || log_warning "Failed to enable journalctl-desktop-notification daemon"
+
     # SCX scheduler configuration
     log_info "Configuring SCX scheduler..."
-    {
-        echo 'default_sched = "scx_lavd"'
-        echo 'default_mode = "Auto"'
-    } | sudo tee /etc/scx_loader.toml > /dev/null
+    sudo stow -t / scx_loader || log_warning "Failed to stow scx_loader config"
+    sudo systemctl disable --now scx.service 2>/dev/null || true
+    sudo systemctl enable --now scx_loader.service || log_warning "Failed to enable scx_loader daemon"
 
+    # Change shell to fish
     log_info "Changing shell to fish..."
     chsh -s /usr/bin/fish
 
@@ -271,12 +284,7 @@ configure_system() {
     log_info "Disabling ananicy-cpp..."
     sudo systemctl disable --now ananicy-cpp 2>/dev/null || true
 
-    # Configure SCX services
-    log_info "Configuring SCX services..."
-    sudo systemctl disable --now scx.service 2>/dev/null || true
-    sudo systemctl enable --now scx_loader.service || log_warning "Failed to enable scx_loader daemon"
-
-    # Enable LACT daemon
+       # Enable LACT daemon
     log_info "Enabling LACT daemon..."
     sudo systemctl enable --now lactd || log_warning "Failed to enable LACT daemon"
 
@@ -296,30 +304,75 @@ configure_system() {
     # Setup EDID virtual display
     log_info "Enabling virtual display..."
     sudo mkdir -p /usr/lib/firmware/edid || log_warning "Failed to create edid directory"
-    sudo cp ./modified-edid /usr/lib/firmware/edid/ || log_warning "Failed to copy EDID"
+    sudo cp ~/dotfiles/modified-edid /usr/lib/firmware/edid/ || log_warning "Failed to copy EDID"
     sudo touch /etc/mkinitcpio.conf.d/edid.conf || log_warning "Failed to create edid.conf"
     echo "FILES=(/usr/lib/firmware/edid/modified-edid)" | sudo tee -a /etc/mkinitcpio.conf.d/edid.conf > /dev/null
     sudo cp /etc/limine-entry-tool.conf /etc/default/limine || log_warning "Failed to copy limine-entry-tool config"
     cmdline=$(cat /proc/cmdline)
     extra_params=" drm.edid_firmware=HDMI-A-1:edid/modified-edid video=HDMI-A-1:e"
     echo "KERNEL_CMDLINE[\"linux-cachyos\"]=\"${cmdline}${extra_params}\"" | sudo tee -a /etc/default/limine > /dev/null
+    sudo limine-mkinitcpio
+
+    # TODO Setup ly config
 
     # Update tldr pages
     log_info "Updating tldr pages..."
     tldr --update || log_warning "Failed to update tldr pages"
 
-    # Setup Firefox with Arkenfox
-    log_info "Setting up Firefox with Arkenfox..."
-    firefox &
-    sleep 5
-    pkill firefox || true
-    arkenfox-updater || log_warning "Failed to update arkenfox user.js"
+    # TODO Theme kvantum, nwg-look and qt6ct
 
-    # Stow configs
-    log_info "Stowing configs..."
-    stow fish ghostty fontconfig hypr btop dunst mangohud nvim SLSsteam waybar yazi wofi || log_warning "Failed to stow config files"
+    # TODO Setup Firefox with Arkenfox
+
+    # Setup git
+    log_info "Setup git"
+    git config --global user.name "Adrian"
+    git config --global user.email "noreply@adrian.com"
+    ssh-keygen -t ed25519 -C "noreply@adrian.com"
+    log_info "Add this key to github"
+    echo "--- BEGIN PUBLIC KEY ---"
+    cat ~/.ssh/id_ed25519.pub
+    echo "--- END PUBLIC KEY ---"
 
     log_success "System configuration complete"
+}
+
+stow_config() {
+    log_info "Stowing config..."
+    packages=(
+        fish
+	ghostty
+	fontconfig
+	hypr
+	btop
+	dunst
+	mangohud
+	nvim
+	SLSsteam
+	waybar
+	yazi
+	wofi
+	sunshine
+    )
+
+    cd ~/dotfiles
+
+    # Stow packages, removing existing config directories in ~/.config first
+    for package in "${packages[@]}"; do
+        target_dir="$HOME/.config/$package"
+
+        # Check if the target directory exists in ~/.config
+        if [ -d "$target_dir" ]; then
+            log_info "Found existing config for $package, removing $target_dir"
+            # If it exists, remove it
+            rm -rf "$target_dir"
+        fi
+
+        stow "$package" || log_warning "Failed to stow $package"
+    done
+
+    stow wallpapers || log_warning "Failed to stow wallpapers"
+
+    log_success "Stowing complete"
 }
 
 # Main execution flow
@@ -343,6 +396,7 @@ main() {
     setup_flatpak
     setup_sunshine
     configure_system
+    stow_config
 
     log_success "System setup completed successfully!"
     log_info "Please reboot your system to ensure all changes take effect."
