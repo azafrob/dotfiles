@@ -22,7 +22,18 @@ vim.opt.runtimepath:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+
+-- Relative numbers as code line
+vim.opt.number = true
 vim.opt.relativenumber = true
+
+-- Indent settings (suggested by AI)
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true
+vim.opt.smarttab = true
 
 -- Setup lazy.nvim
 require("lazy").setup({

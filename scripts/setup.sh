@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail  # Exit on error, undefined vars, and pipe failures
+set -euo pipefail # Exit on error, undefined vars, and pipe failures
 
 # Colors for output
 readonly RED='\033[0;31m'
@@ -73,7 +73,7 @@ setup_cachyos_repo() {
 # Update system
 update_system() {
     log_info "Updating system packages..."
-    sudo pacman -Syu || error_exit "System update failed"
+    sudo pacman -Syu --noconfirm || error_exit "System update failed"
     log_success "System update complete"
 }
 
@@ -87,10 +87,9 @@ install_main_packages() {
         linux-cachyos-headers
         cachyos-settings
         scx-scheds-git
-        mesa-git
         limine-mkinitcpio-hook
-	limine-snapper-sync
-	snap-pac
+        limine-snapper-sync
+        snap-pac
         xdg-desktop-portal-gtk
 
         # System utilities
@@ -121,10 +120,13 @@ install_main_packages() {
         git
         lazygit
         unrar
+        unzip
         yay
         firefox
-	wine
-	pavucontrol
+        wine
+        pavucontrol
+        mpv
+        luarocks
 
         # Theming
         kvantum
@@ -139,7 +141,7 @@ install_main_packages() {
         steam
     )
 
-    if ! sudo pacman -S --needed "${packages[@]}"; then
+    if ! sudo pacman -S --needed --noconfirm "${packages[@]}"; then
         log_warning "Some main packages failed to install"
     else
         log_success "Main packages installed successfully"
@@ -163,7 +165,7 @@ install_hyprland_packages() {
         wl-clipboard
     )
 
-    if ! sudo pacman -S --needed "${hyprland_packages[@]}"; then
+    if ! sudo pacman -S --needed --noconfirm "${hyprland_packages[@]}"; then
         log_warning "Some Hyprland packa/ges failed to install"
     else
         log_success "Hyprland packages installed successfully"
@@ -185,11 +187,11 @@ install_aur_packages() {
         gamemode-git
         mangohud-git
         qt6ct-kde
-	journalctl-desktop-notification
+        journalctl-desktop-notification
         arkenfox-user.js
     )
 
-    if ! yay -S --needed "${aur_packages[@]}"; then
+    if ! yay -S --needed --noconfirm "${aur_packages[@]}"; then
         log_warning "Some AUR packages failed to install"
     else
         log_success "AUR packages installed successfully"
@@ -206,6 +208,8 @@ setup_flatpak() {
         com.github.Matoking.protontricks
         com.vysp3r.ProtonPlus
         dev.vencord.Vesktop
+        com.github.tchx84.Flatseal
+        it.mijorus.gearlever
     )
 
     if flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
@@ -225,23 +229,27 @@ setup_flatpak() {
 setup_sunshine() {
     log_info "Setting up Sunshine streaming server..."
 
-    # Add Sunshine repositories
-    {
-        echo ""
-        echo "[lizardbyte-beta]"
-        echo "SigLevel = Optional"
-        echo "Server = https://github.com/LizardByte/pacman-repo/releases/download/beta"
-        echo ""
-        echo "[lizardbyte]"
-        echo "SigLevel = Optional"
-        echo "Server = https://github.com/LizardByte/pacman-repo/releases/latest/download"
-    } | sudo tee -a /etc/pacman.conf > /dev/null
+    if ! grep -qE 'lizardbyte(-beta)?' /etc/pacman.conf; then
+        # Add Sunshine repositories
+        {
+            echo ""
+            echo "[lizardbyte-beta]"
+            echo "SigLevel = Optional"
+            echo "Server = https://github.com/LizardByte/pacman-repo/releases/download/beta"
+            echo ""
+            echo "[lizardbyte]"
+            echo "SigLevel = Optional"
+            echo "Server = https://github.com/LizardByte/pacman-repo/releases/latest/download"
+        } | sudo tee -a /etc/pacman.conf > /dev/null
+    else
+        log_warning "Sunshine repo already in pacman.conf"
+    fi
 
     # Update package database
     sudo pacman -Sy || log_warning "Failed to update package database"
 
     # Install Sunshine
-    if sudo pacman -S lizardbyte-beta/sunshine-git; then
+    if sudo pacman -S --noconfirm lizardbyte-beta/sunshine-git; then
         log_success "Sunshine installed successfully"
     else
         log_warning "Failed to install Sunshine"
@@ -260,7 +268,11 @@ configure_system() {
 
     # Motherboard fan controller module
     log_info "Adding motherboard fan controller module..."
-    echo "nct6775" | sudo tee "/etc/modules-load.d/custom_modules.conf" > /dev/null
+    if [ ! -e /etc/modules-load.d/custom_modules.conf ]; then
+        echo "nct6775" | sudo tee "/etc/modules-load.d/custom_modules.conf" > /dev/null
+    else
+        log_warning "Module already exists"
+    fi
 
     # Enable limine-snapper-sync
     log_info "Enabling limine-snapper-sync"
@@ -272,7 +284,11 @@ configure_system() {
 
     # SCX scheduler configuration
     log_info "Configuring SCX scheduler..."
-    sudo stow -t / scx_loader || log_warning "Failed to stow scx_loader config"
+    if [ ! -e /etc/scx_loader.toml ]; then
+        sudo stow -t / scx_loader || log_warning "Failed to stow scx_loader config"
+    else
+        log_warning "Scx_loader config already exists"
+    fi
     sudo systemctl disable --now scx.service 2>/dev/null || true
     sudo systemctl enable --now scx_loader.service || log_warning "Failed to enable scx_loader daemon"
 
@@ -284,7 +300,7 @@ configure_system() {
     log_info "Disabling ananicy-cpp..."
     sudo systemctl disable --now ananicy-cpp 2>/dev/null || true
 
-       # Enable LACT daemon
+    # Enable LACT daemon
     log_info "Enabling LACT daemon..."
     sudo systemctl enable --now lactd || log_warning "Failed to enable LACT daemon"
 
@@ -298,22 +314,41 @@ configure_system() {
 
     # Enable fan2go
     log_info "Enabling fan2go..."
-    sudo stow -t / fan2go || log_warning "Failed to stow fan2go config"
+    if [ ! -e /etc/fan2go/fan2go.yaml ]; then
+        sudo stow -t / fan2go || log_warning "Failed to stow fan2go config"
+    else
+        log_warning "Fan2go config already exists"
+    fi
     sudo systemctl enable --now fan2go.service || log_warning "Failed to enable fan2go daemon"
 
     # Setup EDID virtual display
     log_info "Enabling virtual display..."
     sudo mkdir -p /usr/lib/firmware/edid || log_warning "Failed to create edid directory"
     sudo cp ~/dotfiles/modified-edid /usr/lib/firmware/edid/ || log_warning "Failed to copy EDID"
-    sudo touch /etc/mkinitcpio.conf.d/edid.conf || log_warning "Failed to create edid.conf"
-    echo "FILES=(/usr/lib/firmware/edid/modified-edid)" | sudo tee -a /etc/mkinitcpio.conf.d/edid.conf > /dev/null
-    sudo cp /etc/limine-entry-tool.conf /etc/default/limine || log_warning "Failed to copy limine-entry-tool config"
-    cmdline=$(cat /proc/cmdline)
-    extra_params=" drm.edid_firmware=HDMI-A-1:edid/modified-edid video=HDMI-A-1:e"
-    echo "KERNEL_CMDLINE[\"linux-cachyos\"]=\"${cmdline}${extra_params}\"" | sudo tee -a /etc/default/limine > /dev/null
+    if [ ! -e /etc/mkinitcpio.conf.d/edid.conf ]; then
+        sudo touch /etc/mkinitcpio.conf.d/edid.conf || log_warning "Failed to create edid.conf"
+        echo "FILES=(/usr/lib/firmware/edid/modified-edid)" | sudo tee -a /etc/mkinitcpio.conf.d/edid.conf > /dev/null
+    else
+        log_warning "Edid mkinitcpio override already exists"
+    fi
+    if [ ! -e /etc/default/limine ]; then
+        sudo cp /etc/limine-entry-tool.conf /etc/default/limine || log_warning "Failed to copy limine-entry-tool config"
+        cmdline=$(cat /proc/cmdline)
+        extra_params=" drm.edid_firmware=HDMI-A-1:edid/modified-edid video=HDMI-A-1:e"
+        echo "KERNEL_CMDLINE[\"linux-cachyos\"]=\"${cmdline}${extra_params}\"" | sudo tee -a /etc/default/limine > /dev/null
+    else
+        log_warning "Limine-entry-tool config already exists"
+    fi
     sudo limine-mkinitcpio
 
-    # TODO Setup ly config
+    # Setup ly config
+    log_info "Setup ly config"
+    if [ ! -e /etc/ly/config.ini ]; then
+        sudo stow -t / ly || log_warning "Failed to stow ly"
+    else
+        sudo rm /etc/ly/config.ini || log_warning "Failed to remove existent ly config"
+        sudo stow -t / ly || log_warning "Failed to stow ly"
+    fi
 
     # Update tldr pages
     log_info "Updating tldr pages..."
@@ -327,41 +362,62 @@ configure_system() {
     log_info "Setup git"
     git config --global user.name "Adrian"
     git config --global user.email "noreply@adrian.com"
-    ssh-keygen -t ed25519 -C "noreply@adrian.com"
+    if [ ! -e ~/.ssh/id_ed25519 ]; then
+        ssh-keygen -t ed25519 -C "noreply@adrian.com"
+    else
+        log_warning "Ssh already exists"
+    fi
     log_info "Add this key to github"
-    echo "--- BEGIN PUBLIC KEY ---"
+    echo "-----BEGIN PUBLIC KEY-----"
     cat ~/.ssh/id_ed25519.pub
-    echo "--- END PUBLIC KEY ---"
+    echo "-----END PUBLIC KEY-----"
+
+    # Setup Chaotic AUR repo
+    log_info "Setup Chaotic AUR repo"
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+    sudo pacman-key --lsign-key 3056513887B78AEB
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+    if ! grep -qE 'chaotic-aur' /etc/pacman.conf; then
+        # Add Chaotic AUR repo
+        {
+            echo ""
+            echo "[chaotic-aur]"
+            echo "Include = /etc/pacman.d/chaotic-mirrorlist"
+        } | sudo tee -a /etc/pacman.conf > /dev/null
+    else
+        log_warning "Chaotic AUR repo already in pacman.conf"
+    fi
 
     log_success "System configuration complete"
 }
 
 stow_config() {
     log_info "Stowing config..."
-    packages=(
+    stow_packages=(
         fish
-	ghostty
-	fontconfig
-	hypr
-	btop
-	dunst
-	mangohud
-	nvim
-	SLSsteam
-	waybar
-	yazi
-	wofi
-	sunshine
+        ghostty
+        fontconfig
+        hypr
+        btop
+        dunst
+        mangohud
+        nvim
+        SLSsteam
+        waybar
+        yazi
+        wofi
+        sunshine
     )
 
     cd ~/dotfiles
 
     # Stow packages, removing existing config directories in ~/.config first
-    for package in "${packages[@]}"; do
+    for package in "${stow_packages[@]}"; do
         target_dir="$HOME/.config/$package"
 
         # Check if the target directory exists in ~/.config
-        if [ -d "$target_dir" ]; then
+        if [ -e "$target_dir" ]; then
             log_info "Found existing config for $package, removing $target_dir"
             # If it exists, remove it
             rm -rf "$target_dir"
@@ -388,10 +444,7 @@ main() {
     setup_cachyos_repo
     update_system
     install_main_packages
-
-    # Uncomment the next line if you want to install Hyprland packages
-    install_hyprland_packages
-
+    install_hyprland_packages # Comment if you don't want to install Hyprland packages
     install_aur_packages
     setup_flatpak
     setup_sunshine

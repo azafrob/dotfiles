@@ -8,28 +8,32 @@
             "name": "Desktop",
             "prep-cmd": [
                 {
-                    "do": "/home/vee/dotfiles/switch-monitors.sh",
-                    "undo": "/home/vee/dotfiles/switch-monitors.sh"
-                },
-                {
-                    "do": "",
-                    "undo": "systemctl suspend"
+                    "do": "/home/vee/dotfiles/sunshine-display.sh",
+                    "undo": "/home/vee/dotfiles/sunshine-display.sh"
                 }
             ],
             "wait-all": true
         },
         {
+            "auto-detach": true,
             "detached": [
                 "setsid steam steam://open/bigpicture"
             ],
+            "exclude-global-prep-cmd": false,
+            "exit-timeout": 5,
             "image-path": "steam.png",
             "name": "Steam Big Picture",
             "prep-cmd": [
                 {
                     "do": "",
                     "undo": "setsid steam steam://close/bigpicture"
+                },
+                {
+                    "do": "/home/vee/dotfiles/sunshine-display.sh",
+                    "undo": "/home/vee/dotfiles/sunshine-display.sh"
                 }
-            ]
+            ],
+            "wait-all": true
         }
     ],
     "env": {
