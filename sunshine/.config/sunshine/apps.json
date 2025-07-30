@@ -8,8 +8,8 @@
             "name": "Desktop",
             "prep-cmd": [
                 {
-                    "do": "/home/vee/dotfiles/sunshine-display.sh",
-                    "undo": "/home/vee/dotfiles/sunshine-display.sh"
+                    "do": "/home/vee/dotfiles/scripts/sunshine-display.sh",
+                    "undo": "/home/vee/dotfiles/scripts/sunshine-display.sh"
                 }
             ],
             "wait-all": true
@@ -29,8 +29,8 @@
                     "undo": "setsid steam steam://close/bigpicture"
                 },
                 {
-                    "do": "/home/vee/dotfiles/sunshine-display.sh",
-                    "undo": "/home/vee/dotfiles/sunshine-display.sh"
+                    "do": "/home/vee/dotfiles/scripts/sunshine-display.sh",
+                    "undo": "/home/vee/dotfiles/scripts/sunshine-display.sh"
                 }
             ],
             "wait-all": true
