@@ -12,7 +12,7 @@
 }
 
 window#waybar {
-    background-color: rgba(30, 30, 46, 0.85);
+    background-color: @base00;
     color: white;
 }
 
@@ -28,8 +28,8 @@ window#waybar.hidden {
 }
 
 tooltip {
-    background-color: @base;
-    border: 1px solid @blue;
+    background-color: @base00;
+    border: 1px solid @base0D;
 }
 
 tooltip label {
@@ -43,16 +43,16 @@ tooltip label {
 #mode,
 #idle_inhibitor {
     padding: 0px 10px;
-    color: #ffffff;
+    color: @base05;
 }
 
 #pulseaudio.muted {
-    background-color: @blue;
-    color: @crust;
+    background-color: @base0D;
+    color: @base01;
 }
 
 #tray {
-    color: @blue;
+    color: @base0D;
 }
 
 #tray>.passive {
@@ -60,13 +60,13 @@ tooltip label {
 }
 
 #tray>.needs-attention {
-    background-color: @blue;
-    color: @crust;
+    background-color: @base0D;
+    color: @base01;
 }
 
 #idle_inhibitor.activated {
-    background-color: @blue; 
-    color: @crust;
+    background-color: @base0D; 
+    color: @base01;
 }
 
 #workspaces button {
@@ -75,22 +75,22 @@ tooltip label {
 }
 
 #workspaces button:hover {
-    background-color: @blue;
+    background-color: @base0D;
     color: white;
 }
 
 #workspaces button.focused {
-    background-color: @mauve;
+    background-color: @base0E;
 }
 
 #workspaces button.active {
-    border-bottom: 3px solid @blue;
+    border-bottom: 3px solid @base0D;
 }
 
 #workspaces button.urgent {
-    background-color: @mauve;
+    background-color: @base0E;
 }
 
 label:focus {
-    background-color: @crust;
+    background-color: @base01;
 }

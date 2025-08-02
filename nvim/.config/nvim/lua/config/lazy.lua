@@ -23,6 +23,9 @@ vim.opt.runtimepath:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- Ensure termguicolors is enabled if not already
+vim.opt.termguicolors = true
+
 -- Relative numbers as code line
 vim.opt.number = true
 vim.opt.relativenumber = true

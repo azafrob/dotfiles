@@ -1,26 +1,28 @@
+@import "/home/vee/.config/wofi/colors.css";
+
 window {
 margin: 0px;
-border: 1px solid #89b4fa;
-background-color: #1e1e2e;
+border: 1px solid @base0D;
+background-color: @base00;
 }
 
 #input {
 margin: 5px;
 border: none;
-color: #cdd6f4;
-background-color: #11111b;
+color: @base05;
+background-color: @base01;
 }
 
 #inner-box {
 margin: 5px;
 border: none;
-background-color: #1e1e2e;
+background-color: @base00;
 }
 
 #outer-box {
 margin: 5px;
 border: none;
-background-color: #1e1e2e;
+background-color: @base00;
 }
 
 #scroll {
@@ -31,9 +33,9 @@ border: none;
 #text {
 margin: 5px;
 border: none;
-color: #cdd6f4;
+color: @base05;
 }
 
 #entry:selected {
-background-color: #45475a;
+background-color: @base03;
 }

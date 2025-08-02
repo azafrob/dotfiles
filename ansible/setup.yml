@@ -1,0 +1,281 @@
+---
+- name: Setup Arch Linux System
+  hosts: localhost
+  connection: local
+  become: false
+  vars:
+
+    arch_packages:
+      # System
+      - linux-cachyos
+      - linux-cachyos-headers
+      - cachyos-settings
+      - scx-scheds-git
+      - limine-mkinitcpio-hook
+      - limine-snapper-sync
+      - snap-pac
+      - xdg-desktop-portal-gtk
+      # Tools
+      - zsh
+      - 7zip
+      - ghostty
+      - fuse2
+      - fuse3
+      - man-db
+      - tealdeer
+      - stow
+      - neovim
+      - downgrade
+      - fzf
+      - zoxide
+      - ripgrep
+      - fd
+      - nnn-nerd
+      - fastfetch
+      - atool
+      - flatpak
+      - brightnessctl
+      - amdgpu_top
+      - libnotify
+      - playerctl
+      - btop
+      - rocm-smi-lib
+      - git
+      - lazygit
+      - unrar
+      - unzip
+      - yay
+      - firefox
+      - wine
+      - pavucontrol
+      - mpv
+      - luarocks
+      - steam
+      - lizardbyte-beta/sunshine-git
+      # Theming & Fonts
+      - kvantum
+      - nwg-look
+      - noto-fonts
+      - noto-fonts-cjk
+      - noto-fonts-emoji
+      - noto-fonts-extra
+      - ttf-hack-nerd
+      # Hyprland
+      - xdg-desktop-portal-hyprland
+      - waybar
+      - hyprpaper
+      - dunst
+      - wofi
+      - hyprlock
+      - hypridle
+      - grim
+      - slurp
+      - wl-clipboard
+
+    aur_packages:
+      - gamescope-git
+      - fan2go-git
+      - lact-git
+      - tinty-git
+      - papirus-icon-theme-git
+      - bibata-cursor-theme
+      - catppuccin-gtk-theme-mocha
+      - gamemode-git
+      - mangohud-git
+      - lib32-mangohud-git
+      - qt6ct-kde
+      - journalctl-desktop-notification
+      - arkenfox-user.js
+
+    flatpak_packages:
+      - org.qbittorrent.qBittorrent
+      - org.jdownloader.JDownloader
+      - com.github.Matoking.protontricks
+      - com.vysp3r.ProtonPlus
+      - dev.vencord.Vesktop
+      - com.github.tchx84.Flatseal
+      - it.mijorus.gearlever
+
+    services:
+      - {name: "limine-snapper-sync", system: true, enabled: true}
+      - {name: "scx", system: true, enabled: false}
+      - {name: "scx_loader", system: true, enabled: true}
+      - {name: "lactd", system: true, enabled: true}
+      - {name: "fan2go", system: true, enabled: true}
+      - {name: "ananicy-cpp", system: true, enabled: false}
+
+    stow_packages:
+      - {name: "zsh", target: "/home/{{ ansible_user_id }}"}
+      - {name: "fontconfig", target: "/home/{{ ansible_user_id }}"}
+      - {name: "hypr", target: "/home/{{ ansible_user_id }}"}
+      - {name: "ghostty", target: "/home/{{ ansible_user_id }}"}
+      - {name: "btop", target: "/home/{{ ansible_user_id }}"}
+      - {name: "dunst", target: "/home/{{ ansible_user_id }}"}
+      - {name: "mangohud", target: "/home/{{ ansible_user_id }}"}
+      - {name: "nvim", target: "/home/{{ ansible_user_id }}"}
+      - {name: "SLSsteam", target: "/home/{{ ansible_user_id }}"}
+      - {name: "waybar", target: "/home/{{ ansible_user_id }}"}
+      - {name: "wofi", target: "/home/{{ ansible_user_id }}"}
+      - {name: "sunshine", target: "/home/{{ ansible_user_id }}"}
+      - {name: "tinty", target: "/home/{{ ansible_user_id }}"}
+      - {name: "fan2go", target: "/"}
+
+    my_commands:
+      - {cmd: "tldr --update", root: false}
+      - {cmd: "tinty sync", root: false}
+      - {cmd: "tinty apply base16-catppuccin-mocha", root: false}
+      - {cmd: "nmcli c modify 'Wired connection 1' 802-3-ethernet.wake-on-lan magic", root: false}
+      - {cmd: "limine-mkinitcpio", root: true}
+
+  tasks:
+    - name: Fail if running as root
+      fail:
+        msg: "Don't run as root!"
+      when: ansible_user_id == "root"
+
+    - name: Download and extract CachyOS repo archive
+      unarchive:
+        src: https://mirror.cachyos.org/cachyos-repo.tar.xz
+        dest: /tmp
+        remote_src: yes
+        creates: /tmp/cachyos-repo
+      register: download_result
+
+    - name: Run CachyOS repo setup script
+      command: ./cachyos-repo.sh
+      args:
+        chdir: /tmp/cachyos-repo
+      when: download_result.changed
+      become: yes
+
+    - name: Clean up temporary files
+      file:
+        path: /tmp/cachyos-repo
+        state: absent
+      when: download_result.changed
+
+    - name: Add repositories to pacman.conf
+      blockinfile:
+        path: /etc/pacman.conf
+        block: |
+          [lizardbyte]
+          SigLevel = Optional
+          Server = https://github.com/LizardByte/pacman-repo/releases/latest/download
+          
+          [lizardbyte-beta]
+          SigLevel = Optional
+          Server = https://github.com/LizardByte/pacman-repo/releases/download/beta
+        marker: "# {mark} ANSIBLE MANAGED REPOS"
+      become: yes
+
+    - name: Update system
+      pacman:
+        update_cache: yes
+        upgrade: yes
+      become: yes
+
+    - name: Install arch packages
+      pacman:
+        name: "{{ arch_packages }}"
+        state: present
+      become: yes
+
+    - name: Install aur packages
+      pacman:
+        name: "{{ aur_packages }}"
+        executable: yay
+        state: present
+
+    - name: Add the flathub flatpak repository remote
+      flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        state: present
+
+    - name: Install Flatpak apps
+      flatpak:
+        name: "{{ flatpak_packages }}"
+        state: present
+
+    - name: Change shell
+      user:
+        name: "{{ ansible_user_id }}"
+        shell: /usr/bin/zsh
+      become: yes
+
+    - name: Add fan controller module
+      modprobe:
+        name: nct6775
+        state: present
+        persistent: present
+      become: yes
+
+    - name: Ensure EDID firmware directory exists
+      file:
+        path: /usr/lib/firmware/edid
+        state: directory
+        mode: '0755'
+      become: yes
+
+    - name: Copy modified-edid to firmware directory
+      copy:
+        src: ~/dotfiles/res/modified-edid
+        dest: /usr/lib/firmware/edid/modified-edid
+        mode: '0644'
+      become: yes
+
+    - name: Ensure edid.conf exists and contains correct line
+      lineinfile:
+        path: /etc/mkinitcpio.conf.d/edid.conf
+        create: yes
+        line: 'FILES=(/usr/lib/firmware/edid/modified-edid)'
+        state: present
+      become: yes
+    
+    - name: Copy limine-entry-tool config if /etc/default/limine does not exist
+      copy:
+        src: /etc/limine-entry-tool.conf
+        dest: /etc/default/limine
+        remote_src: yes
+        force: no
+      become: yes
+
+    - name: Add KERNEL_CMDLINE to /etc/default/limine if not present
+      lineinfile:
+        path: /etc/default/limine
+        line: "KERNEL_CMDLINE[\"linux-cachyos\"]=\"{{ lookup('file', '/proc/cmdline') }} drm.edid_firmware=HDMI-A-1:edid/modified-edid video=HDMI-A-1:e\""
+        insertafter: EOF
+        state: present
+      become: yes
+
+    - name: Remove existing config directories
+      file:
+        path: "/home/{{ ansible_user_id }}/.config/{{ item.name }}"
+        state: absent
+      loop: "{{ stow_packages }}"
+
+    - name: Stow configuration packages
+      command: stow -t {{ item.target }} -d /home/{{ ansible_user_id }}/dotfiles {{ item.name }}
+      loop: "{{ stow_packages }}"
+      become: yes
+
+    - name: Manage system services
+      systemd_service:
+        name: "{{ item.name }}"
+        enabled: "{{ item.enabled }}"
+        state: "{{ 'started' if item.enabled else 'stopped' }}"
+        scope: system
+      loop: "{{ services }}"
+      when: item.system
+      become: yes
+
+    - name: Run my commands (non-sudo)
+      command: "{{ item.cmd }}"
+      loop: "{{ my_commands }}"
+      when: not item.root
+
+    - name: Run my commands (sudo)
+      command: "{{ item.cmd }}"
+      loop: "{{ my_commands }}"
+      when: item.root
+      become: yes
