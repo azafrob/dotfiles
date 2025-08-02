@@ -20,7 +20,7 @@ test -f "${ZINIT_HOME}/zinit.zsh" \
 source "${ZINIT_HOME}/zinit.zsh"
 
 # You can find more plugins on https://github.com/unixorn/awesome-zsh-plugins#plugins
-zinit light zdharma-continuum/fast-syntax-highlighting
+zinit light z-shell/F-Sy-H
 zinit light zsh-users/zsh-autosuggestions
 zinit light marlonrichert/zsh-autocomplete
 
