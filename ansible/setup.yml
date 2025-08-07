@@ -6,6 +6,7 @@
   vars:
 
     username: "{{ ansible_user_id }}"
+    homedir: "/home/{{ username }}"
 
     arch_packages:
       # System
@@ -190,8 +191,8 @@
         state: "{{ item.state }}"
       become: yes
       loop:
-        - {path: /usr/lib/firmware/edid/, state: directory}
-        - {path: ~/.config/hypr/, state: absent}
+        - {path: "/usr/lib/firmware/edid/", state: directory}
+        - {path: "{{ homedir }}/.config/hypr/", state: absent}
 
     - name: Copy config files if they do not exist
       copy:
@@ -200,9 +201,9 @@
         force: no
       become: yes
       loop:
-        - {src: /etc/limine-entry-tool.conf, dest: /etc/default/limine}
-        - {src: ~/dotfiles/res/modified-edid, dest: /usr/lib/firmware/edid/modified-edid}
-        - {src: /proc/cmdline, dest: /etc/ogcmdline}
+        - {src: "/etc/limine-entry-tool.conf", dest: "/etc/default/limine"}
+        - {src: "{{ homedir }}/dotfiles/res/modified-edid", dest: "/usr/lib/firmware/edid/modified-edid"}
+        - {src: "/proc/cmdline", dest: "/etc/ogcmdline"}
 
     - name: Add string blocks to files
       blockinfile:
@@ -284,11 +285,11 @@
       become: yes
 
     - name: Stow user configuration
-      command: stow -t /home/{{ username }}/ -d /home/{{ username }}/dotfiles {{ item }}
+      command: stow -t {{ homedir }} -d {{ homedir }}/dotfiles {{ item }}
       loop: "{{ stow_user_packages }}"
 
     - name: Stow system configuration
-      command: stow -t / -d /home/{{ username }}/dotfiles {{ item }}
+      command: stow -t / -d {{ homedir }}/dotfiles {{ item }}
       loop: "{{ stow_sys_packages }}"
       become: yes
 
