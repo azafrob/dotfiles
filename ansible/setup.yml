@@ -163,6 +163,9 @@
       - tinty sync
       - tinty apply base16-catppuccin-mocha
       - nmcli c modify 'Wired connection 1' 802-3-ethernet.wake-on-lan magic
+      - git config --global user.name "Adrian"
+      - git config --global user.email "noreply@adrian.com"
+      - ssh-keygen -t ed25519 -C "noreply@adrian.com"
 
     sys_commands:
       - limine-mkinitcpio
@@ -290,6 +293,7 @@
     - name: Run my user commands
       command: "{{ item }}"
       loop: "{{ user_commands }}"
+      tags: test
 
     - name: Run my system commands
       command: "{{ item }}"

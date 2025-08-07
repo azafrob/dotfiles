@@ -7,6 +7,12 @@ opt.shiftwidth = 4
 opt.softtabstop = -1
 opt.expandtab = true
 
+-- Disable arrow keys in normal mode
+map({ 'n', 'v' }, '<Up>', '<cmd>echo "Use k to move up"<CR>')
+map({ 'n', 'v' }, '<Down>', '<cmd>echo "Use j to move down"<CR>')
+map({ 'n', 'v' }, '<Left>', '<cmd>echo "Use h to move left"<CR>')
+map({ 'n', 'v' }, '<Right>', '<cmd>echo "Use l to move right"<CR>')
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 -- NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -65,7 +71,11 @@ map({ 'n' }, '<A-h>', '<C-w>h')
 map({ 'n' }, '<A-j>', '<C-w>j')
 map({ 'n' }, '<A-k>', '<C-w>k')
 map({ 'n' }, '<A-l>', '<C-w>l')
+
 map({ 'n' }, '<leader>h', ':Pick help<CR>')
+map({ 'n' }, '<leader>f', ':Pick files<CR>')
+map({ 'n' }, '<leader>ne', ':NnnExplorer<CR>')
+map({ 'n' }, '<leader>nf', ':NnnPicker<CR>')
 map({ 'n' }, '<leader>lf', vim.lsp.buf.format)
 
 -- [[ Basic Autocommands ]].
@@ -104,6 +114,7 @@ vim.cmd('packadd! nohlsearch')
 vim.pack.add({
     { src = 'https://github.com/neovim/nvim-lspconfig' },
     { src = 'https://github.com/echasnovski/mini.nvim' },
+    { src = 'https://github.com/luukvbaal/nnn.nvim' },
 })
 
 vim.lsp.enable({ 'lua_ls', 'clangd' })
@@ -178,6 +189,8 @@ require('mini.icons').setup()
 MiniIcons.tweak_lsp_kind()
 
 require('mini.snippets').setup()
+
+require('nnn').setup()
 
 -- [[ Post-load options ]]
 -- Transparent background
