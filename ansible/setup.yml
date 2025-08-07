@@ -5,6 +5,8 @@
   become: false
   vars:
 
+    username: "{{ ansible_user_id }}"
+
     arch_packages:
       # System
       - linux-cachyos
@@ -165,7 +167,6 @@
       - nmcli c modify 'Wired connection 1' 802-3-ethernet.wake-on-lan magic
       - git config --global user.name "Adrian"
       - git config --global user.email "noreply@adrian.com"
-      - ssh-keygen -t ed25519 -C "noreply@adrian.com"
 
     sys_commands:
       - limine-mkinitcpio
@@ -266,10 +267,11 @@
         name: "{{ flatpak_packages }}"
         state: present
 
-    - name: Change shell
+    - name: User setup
       user:
-        name: "{{ ansible_user_id }}"
+        name: "{{ username }}"
         shell: /usr/bin/zsh
+        generate_ssh_key: true
       become: yes
 
     - name: Manage system services
@@ -282,18 +284,17 @@
       become: yes
 
     - name: Stow user configuration
-      command: stow -t /home/{{ ansible_user_id }}/ -d /home/{{ ansible_user_id }}/dotfiles {{ item }}
+      command: stow -t /home/{{ username }}/ -d /home/{{ username }}/dotfiles {{ item }}
       loop: "{{ stow_user_packages }}"
 
     - name: Stow system configuration
-      command: stow -t / -d /home/{{ ansible_user_id }}/dotfiles {{ item }}
+      command: stow -t / -d /home/{{ username }}/dotfiles {{ item }}
       loop: "{{ stow_sys_packages }}"
       become: yes
 
     - name: Run my user commands
       command: "{{ item }}"
       loop: "{{ user_commands }}"
-      tags: test
 
     - name: Run my system commands
       command: "{{ item }}"
