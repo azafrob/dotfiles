@@ -95,11 +95,9 @@ setopt interactive_comments      # Allow comments even in interactive shells.
 
 # Aliases ------------------------------------------------------------------------------------------
 
-alias l='ls -Ah --group-directories-first'
-alias md='mkdir -p'
+alias ls='nnn -deJDH'
+alias cd='z'
 #alias dl='trash-put'
-alias a='7z'
-alias g='git'
 alias slssteam='LD_AUDIT="/home/vee/Downloads/SLSsteam/bin/SLSsteam.so" nohup steam >/dev/null 2>&1 &'
 
 # Functions ----------------------------------------------------------------------------------------
@@ -110,8 +108,8 @@ mv() { if [ "$#" -eq 0 ]; then command mv -i  "${selection[@]}" .; else command 
 cp() { if [ "$#" -eq 0 ]; then command cp -ir "${selection[@]}" .; else command cp -ir "$@"; fi }
 ln() { if [ "$#" -eq 0 ]; then command ln -s  "${selection[@]}" .; else command ln -s  "$@"; fi }
 
-# Ls whenever the current working directory is changed.
-chpwd() { l; }
+# ls whenever the current working directory is changed.
+# chpwd() { ls; }
 
 
 # Startup ------------------------------------------------------------------------------------------
