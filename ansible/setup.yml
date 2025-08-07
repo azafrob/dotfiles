@@ -212,7 +212,7 @@
         marker: "# {mark} ANSIBLE MANAGED"
         backup: yes
         create: yes
-        insertbefore: 'core-testing'
+        insertbefore: BOF
       become: yes
       loop: "{{ string_blocks }}"
 
