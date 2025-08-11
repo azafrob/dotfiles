@@ -1,0 +1,227 @@
+---
+- name: Setup Arch Linux System
+  hosts: localhost
+  connection: local
+  become: false
+  vars:
+
+    username: "{{ ansible_user_id }}"
+    homedir: "/home/{{ username }}"
+
+    arch_packages:
+      - linux-cachyos
+      - linux-cachyos-headers
+      - cachyos-settings
+      - scx-scheds-git
+      - limine-mkinitcpio-hook
+      - limine-snapper-sync
+      # - snap-pac
+      - xdg-desktop-portal-gtk
+      - stow
+      - downgrade
+      - flatpak
+      - noto-fonts
+      - noto-fonts-cjk
+      - noto-fonts-emoji
+      - noto-fonts-extra
+      - amdgpu_top
+      - rocm-smi-lib
+      - firefox
+      - steam
+      - lizardbyte-beta/sunshine-git
+
+    aur_packages:
+      - fan2go-git
+      - lact-git
+      - bibata-cursor-theme
+      - gamemode-git
+      - mangohud-git
+      - lib32-mangohud-git
+      - journalctl-desktop-notification
+      - arkenfox-user.js
+
+    flatpak_packages:
+      - org.qbittorrent.qBittorrent
+      - org.jdownloader.JDownloader
+      - com.github.Matoking.protontricks
+      - com.vysp3r.ProtonPlus
+      - dev.vencord.Vesktop
+      - com.github.tchx84.Flatseal
+      - it.mijorus.gearlever
+
+    sys_services:
+      - {name: "limine-snapper-sync", enabled: true}
+      - {name: "scx_loader", enabled: true}
+      - {name: "lactd", enabled: true}
+      - {name: "fan2go", enabled: true}
+      - {name: "scx", enabled: false}
+      - {name: "ananicy-cpp", enabled: false}
+
+    string_blocks:
+      - name: repositories
+        path: /etc/pacman.conf
+        block: |
+          [cachyos-znver4]
+          Include = /etc/pacman.d/cachyos-v4-mirrorlist
+
+          [cachyos-core-znver4]
+          Include = /etc/pacman.d/cachyos-v4-mirrorlist
+          
+          [cachyos-extra-znver4]
+          Include = /etc/pacman.d/cachyos-v4-mirrorlist
+          
+          [cachyos]
+          Include = /etc/pacman.d/cachyos-mirrorlist
+
+          [lizardbyte]
+          SigLevel = Optional
+          Server = https://github.com/LizardByte/pacman-repo/releases/latest/download
+          
+          [lizardbyte-beta]
+          SigLevel = Optional
+          Server = https://github.com/LizardByte/pacman-repo/releases/download/beta
+      - name: edid
+        path: /etc/mkinitcpio.conf.d/custom.conf
+        block: |
+          FILES=(/usr/lib/firmware/edid/modified-edid)
+          MODULES=(nct6775)
+      - name: cmdline
+        path: /etc/default/limine
+        block: |
+          KERNEL_CMDLINE["linux-cachyos"]="{{ lookup('file', '/etc/ogcmdline') }} drm.edid_firmware=HDMI-A-1:edid/modified-edid video=HDMI-A-1:e"
+          BOOT_ORDER="*cachyos, *zen, *, *fallback, Snapshots"
+
+    stow_user_packages:
+      - omarchy
+      - mangohud
+      - SLSsteam
+      - sunshine
+
+    stow_sys_packages:
+      - fan2go
+      - scx_loader
+
+    user_commands:
+      - tldr --update
+      - nmcli c modify 'Wired connection 1' 802-3-ethernet.wake-on-lan magic
+
+    sys_commands:
+      - limine-mkinitcpio
+
+  tasks:
+    - name: Fail if running as root
+      fail:
+        msg: "Don't run as root!"
+      when: ansible_user_id == "root"
+
+    - name: Create and ensure dirs and files
+      file:
+        path: "{{ item.path }}"
+        state: "{{ item.state }}"
+      become: yes
+      loop:
+        - {path: "/usr/lib/firmware/edid/", state: directory}
+        - {path: "/etc/default/limine", state: touch}
+        - {path: "{{ homedir }}/.config/hypr/", state: absent}
+
+    - name: Copy config files if they do not exist
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        force: no
+      become: yes
+      loop:
+        - {src: "{{ homedir }}/dotfiles/res/modified-edid", dest: "/usr/lib/firmware/edid/modified-edid"}
+        - {src: "/proc/cmdline", dest: "/etc/ogcmdline"}
+
+    - name: Add string blocks to files
+      blockinfile:
+        path: "{{ item.path }}"
+        block: "{{ item.block }}"
+        marker: "# {mark} ANSIBLE MANAGED"
+        backup: yes
+        create: yes
+        insertbefore: BOF
+      become: yes
+      loop: "{{ string_blocks }}"
+
+    - name: Repo keys
+      command: "{{ item }}"
+      become: yes
+      loop:
+        - pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+        - pacman-key --lsign-key F3B607488DB35A47
+
+    - name: Repo mirror and keyrings
+      pacman:
+        name: "{{ item }}"
+        state: present
+      become: yes
+      loop:
+        - https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-keyring-20240331-1-any.pkg.tar.zst
+        - https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-mirrorlist-22-1-any.pkg.tar.zst
+        - https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v3-mirrorlist-22-1-any.pkg.tar.zst
+        - https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v4-mirrorlist-22-1-any.pkg.tar.zst
+        - https://mirror.cachyos.org/repo/x86_64/cachyos/pacman-7.0.0.r7.g1f38429-1-x86_64.pkg.tar.zst
+
+    - name: Update system
+      pacman:
+        update_cache: yes
+        upgrade: yes
+      become: yes
+
+    - name: Install arch packages
+      pacman:
+        name: "{{ arch_packages }}"
+        state: present
+      become: yes
+
+    - name: Install aur packages
+      pacman:
+        name: "{{ aur_packages }}"
+        executable: yay
+        state: present
+
+    - name: Add the flathub flatpak repository remote
+      flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        state: present
+
+    - name: Install Flatpak apps
+      flatpak:
+        name: "{{ flatpak_packages }}"
+        state: present
+
+    - name: User setup
+      user:
+        name: "{{ username }}"
+        generate_ssh_key: true
+      become: yes
+
+    - name: Manage system services
+      systemd_service:
+        name: "{{ item.name }}"
+        enabled: "{{ item.enabled }}"
+        state: "{{ 'started' if item.enabled else 'stopped' }}"
+        scope: system
+      loop: "{{ sys_services }}"
+      become: yes
+
+    - name: Stow user configuration
+      command: stow -t {{ homedir }} -d {{ homedir }}/dotfiles {{ item }}
+      loop: "{{ stow_user_packages }}"
+
+    - name: Stow system configuration
+      command: stow -t / -d {{ homedir }}/dotfiles {{ item }}
+      loop: "{{ stow_sys_packages }}"
+      become: yes
+
+    - name: Run my user commands
+      command: "{{ item }}"
+      loop: "{{ user_commands }}"
+
+    - name: Run my system commands
+      command: "{{ item }}"
+      become: yes
+      loop: "{{ sys_commands }}"
