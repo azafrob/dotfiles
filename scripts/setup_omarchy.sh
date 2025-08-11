@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-set -x # Show each command before running
 
 # === Safety check: Don't run as root ===
 if [[ $EUID -eq 0 ]]; then
