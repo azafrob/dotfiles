@@ -39,7 +39,6 @@ AUR_PACKAGES=(
   lib32-mangohud-git
   journalctl-desktop-notification
   arkenfox-user.js
-  informant
 )
 
 FLATPAK_PACKAGES=(
@@ -117,6 +116,7 @@ sudo pacman -Syu --noconfirm
 echo "=== Installing packages ==="
 sudo pacman -S --noconfirm --needed "${ARCH_PACKAGES[@]}"
 yay -S --noconfirm --needed "${AUR_PACKAGES[@]}"
+yay -S --noconfirm --needed informant
 
 echo "=== Setting up Flatpak ==="
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
