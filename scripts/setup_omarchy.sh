@@ -59,6 +59,7 @@ sudo touch /etc/default/limine
 echo "=== Copying config files if they do not exist ==="
 [[ ! -f /usr/lib/firmware/edid/modified-edid ]] && sudo cp "$HOME/dotfiles/res/modified-edid" /usr/lib/firmware/edid/modified-edid
 [[ ! -f /etc/original_cmdline ]] && sudo cp /proc/cmdline /etc/original_cmdline
+[[ ! -f /etc/original_pacman.conf ]] && sudo cp /etc/pacman.conf /etc/original_pacman.conf
 
 echo "=== Writing blockinfile content ==="
 sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
@@ -85,7 +86,7 @@ sudo pacman -U --noconfirm \
   https://mirror.cachyos.org/repo/x86_64/cachyos/pacman-7.0.0.r7.g1f38429-1-x86_64.pkg.tar.zst
 
 echo "=== Adding repositories to /etc/pacman.conf ==="
-sudo tee -a /etc/pacman.conf >/dev/null <<EOF
+sudo tee /tmp/pacman.conf.tmp >/dev/null <<EOF
 [cachyos-znver4]
 Include = /etc/pacman.d/cachyos-v4-mirrorlist
 
@@ -107,12 +108,15 @@ SigLevel = Optional
 Server = https://github.com/LizardByte/pacman-repo/releases/download/beta
 EOF
 
+cat /tmp/pacman.conf.tmp /etc/original_pacman.conf >/tmp/pacman.conf.new && sudo mv /tmp/pacman.conf.new /etc/pacman.conf
+sudo rm /tmp/pacman.conf.tmp
+
 echo "=== Updating system ==="
 sudo pacman -Syu --noconfirm
 
 echo "=== Installing packages ==="
-sudo pacman -S --noconfirm "${ARCH_PACKAGES[@]}"
-yay -S --noconfirm "${AUR_PACKAGES[@]}"
+sudo pacman -S --noconfirm --needed "${ARCH_PACKAGES[@]}"
+yay -S --noconfirm --needed "${AUR_PACKAGES[@]}"
 
 echo "=== Setting up Flatpak ==="
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -125,6 +129,13 @@ sudo systemctl enable scx_loader
 sudo systemctl enable lactd
 sudo systemctl enable fan2go
 sudo systemctl disable ananicy-cpp
+
+echo "=== Removing files before stowing ==="
+rm "$HOME/.config/hypr/autostart.conf"
+rm "$HOME/.config/hypr/bindings.conf"
+rm "$HOME/.config/hypr/envs.conf"
+rm "$HOME/.config/hypr/hypridle.conf"
+rm "$HOME/.config/hypr/monitors.conf"
 
 echo "=== Running stow for user config ==="
 stow -t "$HOME" -d "$HOME/dotfiles" omarchy
