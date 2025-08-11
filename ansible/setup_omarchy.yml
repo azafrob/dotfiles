@@ -11,14 +11,13 @@
     arch_packages:
       - linux-cachyos
       - linux-cachyos-headers
-      - mesa-git
       - cachyos-settings
       - scx-scheds-git
       - limine-mkinitcpio-hook
       - limine-snapper-sync
-      # - snap-pac
       - xdg-desktop-portal-gtk
       - stow
+      - yazi
       - downgrade
       - flatpak
       - noto-fonts
@@ -28,12 +27,10 @@
       - amdgpu_top
       - rocm-smi-lib
       - firefox
-      - steam
       - lizardbyte-beta/sunshine-git
       - fan2go-git
       - lact-git
       - bibata-cursor-theme
-      - gamemode-git
       - mangohud-git
       - lib32-mangohud-git
       - journalctl-desktop-notification
@@ -51,10 +48,10 @@
 
     sys_services:
       - {name: "limine-snapper-sync", enabled: true}
+      - {name: "scx", enabled: false}
       - {name: "scx_loader", enabled: true}
       - {name: "lactd", enabled: true}
       - {name: "fan2go", enabled: true}
-      - {name: "scx", enabled: false}
       - {name: "ananicy-cpp", enabled: false}
 
     string_blocks:
@@ -122,7 +119,6 @@
       loop:
         - {path: "/usr/lib/firmware/edid/", state: directory}
         - {path: "/etc/default/limine", state: touch}
-        - {path: "{{ homedir }}/.config/hypr/", state: absent}
 
     - name: Copy config files if they do not exist
       copy:
@@ -134,21 +130,11 @@
         - {src: "{{ homedir }}/dotfiles/res/modified-edid", dest: "/usr/lib/firmware/edid/modified-edid"}
         - {src: "/proc/cmdline", dest: "/etc/ogcmdline"}
 
-    - name: Add string blocks to files
-      blockinfile:
-        path: "{{ item.path }}"
-        block: "{{ item.block }}"
-        marker: "# {mark} ANSIBLE MANAGED"
-        backup: yes
-        create: yes
-        insertbefore: BOF
-      become: yes
-      loop: "{{ string_blocks }}"
-
     - name: Repo keys
       command: "{{ item }}"
       become: yes
       loop:
+        - pacman-key --init
         - pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
         - pacman-key --lsign-key F3B607488DB35A47
 
@@ -164,18 +150,46 @@
         - https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v4-mirrorlist-22-1-any.pkg.tar.zst
         - https://mirror.cachyos.org/repo/x86_64/cachyos/pacman-7.0.0.r7.g1f38429-1-x86_64.pkg.tar.zst
 
+    - name: Add string blocks to files
+      blockinfile:
+        path: "{{ item.path }}"
+        block: "{{ item.block }}"
+        marker: "# {mark} ANSIBLE MANAGED"
+        backup: yes
+        create: yes
+        insertbefore: BOF
+      become: yes
+      loop: "{{ string_blocks }}"
+
     - name: Update system
       pacman:
         update_cache: yes
         upgrade: yes
       become: yes
 
-    - name: Install arch packages
-      pacman:
+    - name: Create the `aur_builder` user
+      become: yes
+      user:
+        name: aur_builder
+        create_home: yes
+        group: wheel
+
+    - name: Allow the `aur_builder` user to run `sudo pacman` without a password
+      become: yes
+      lineinfile:
+        path: /etc/sudoers.d/11-install-aur_builder
+        line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+        create: yes
+        mode: 0644
+        validate: 'visudo -cf %s'
+
+    - name: Install Arch packages
+      kewlfft.aur.aur:
         name: "{{ arch_packages }}"
-        executable: yay
+        use: yay
         state: present
       become: yes
+      become_user: aur_builder
 
     - name: Add the flathub flatpak repository remote
       flatpak_remote:
