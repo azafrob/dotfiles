@@ -11,6 +11,7 @@
     arch_packages:
       - linux-cachyos
       - linux-cachyos-headers
+      - mesa-git
       - cachyos-settings
       - scx-scheds-git
       - limine-mkinitcpio-hook
@@ -29,8 +30,6 @@
       - firefox
       - steam
       - lizardbyte-beta/sunshine-git
-
-    aur_packages:
       - fan2go-git
       - lact-git
       - bibata-cursor-theme
@@ -39,6 +38,7 @@
       - lib32-mangohud-git
       - journalctl-desktop-notification
       - arkenfox-user.js
+      - informant
 
     flatpak_packages:
       - org.qbittorrent.qBittorrent
@@ -173,14 +173,9 @@
     - name: Install arch packages
       pacman:
         name: "{{ arch_packages }}"
-        state: present
-      become: yes
-
-    - name: Install aur packages
-      pacman:
-        name: "{{ aur_packages }}"
         executable: yay
         state: present
+      become: yes
 
     - name: Add the flathub flatpak repository remote
       flatpak_remote:
