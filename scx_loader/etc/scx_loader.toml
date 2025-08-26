@@ -1,5 +1,5 @@
-default_sched = "scx_lavd"
-default_mode = "Auto"
+default_sched = "scx_p2dq"
+default_mode = "Gaming"
 
 [scheds.scx_rustland]
 auto_mode = []
@@ -24,7 +24,7 @@ server_mode = ["-m", "all", "-s", "20000", "-S", "1000", "-I", "-1", "-D", "-L"]
 
 [scheds.scx_p2dq]
 auto_mode = []
-gaming_mode = []
+gaming_mode = ["--deadline", "-y", "-a"]
 lowlatency_mode = ["-y"]
 powersave_mode = []
 server_mode = ["--keep-running"]

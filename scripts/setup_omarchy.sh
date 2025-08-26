@@ -19,7 +19,9 @@ ARCH_PACKAGES=(
   xdg-desktop-portal-gtk
   stow
   yazi
+  fuse2
   downgrade
+  easyeffects
   flatpak
   noto-fonts
   noto-fonts-cjk
@@ -33,6 +35,7 @@ ARCH_PACKAGES=(
 
 AUR_PACKAGES=(
   fan2go-git
+  gamescope-git
   lact-git
   bibata-cursor-theme
   mangohud-git
@@ -128,6 +131,8 @@ sudo systemctl disable scx
 sudo systemctl enable scx_loader
 sudo systemctl enable lactd
 sudo systemctl enable fan2go
+sudo systemctl enable power-profiles-daemon
+sudo systemctl enable pci-latency
 sudo systemctl disable ananicy-cpp
 
 echo "=== Removing files before stowing ==="
@@ -142,6 +147,8 @@ stow -t "$HOME" -d "$HOME/dotfiles" omarchy
 stow -t "$HOME" -d "$HOME/dotfiles" mangohud
 stow -t "$HOME" -d "$HOME/dotfiles" SLSsteam
 stow -t "$HOME" -d "$HOME/dotfiles" sunshine
+stow -t "$HOME" -d "$HOME/dotfiles" pipewire
+stow -t "$HOME" -d "$HOME/dotfiles" wireplumber
 
 echo "=== Running stow for system config ==="
 sudo stow -t / -d "$HOME/dotfiles" fan2go
