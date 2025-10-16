@@ -29,49 +29,56 @@ ARCH_PACKAGES=(
   noto-fonts-extra
   amdgpu_top
   rocm-smi-lib
-  firefox
+  ethtool
   lizardbyte-beta/sunshine-git
 )
 
 AUR_PACKAGES=(
   fan2go-git
   gamescope-git
+  lib32-mangohud-git
   lact-git
   bibata-cursor-theme
   mangohud-git
-  lib32-mangohud-git
   journalctl-desktop-notification
-  arkenfox-user.js
 )
 
 FLATPAK_PACKAGES=(
   org.qbittorrent.qBittorrent
   org.jdownloader.JDownloader
-  com.github.Matoking.protontricks
   com.vysp3r.ProtonPlus
   dev.vencord.Vesktop
   com.github.tchx84.Flatseal
-  it.mijorus.gearlever
+  io.github.lawstorant.boxflat
 )
 
 echo "=== Creating directories and files ==="
-sudo mkdir -p /usr/lib/firmware/edid/
 sudo touch /etc/default/limine
 
 echo "=== Copying config files if they do not exist ==="
-[[ ! -f /usr/lib/firmware/edid/modified-edid ]] && sudo cp "$HOME/dotfiles/res/modified-edid" /usr/lib/firmware/edid/modified-edid
-[[ ! -f /etc/original_cmdline ]] && sudo cp /proc/cmdline /etc/original_cmdline
 [[ ! -f /etc/original_pacman.conf ]] && sudo cp /etc/pacman.conf /etc/original_pacman.conf
 
 echo "=== Writing blockinfile content ==="
 sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
-FILES=(/usr/lib/firmware/edid/modified-edid)
 MODULES=(nct6775)
 EOF
 
 sudo tee /etc/default/limine >/dev/null <<EOF
-KERNEL_CMDLINE["linux-cachyos"]="$(cat /etc/original_cmdline) drm.edid_firmware=HDMI-A-1:edid/modified-edid video=HDMI-A-1:e"
-BOOT_ORDER="*cachyos, *zen, *, *fallback, Snapshots"
+BOOT_ORDER="*cachyos, *, *fallback, Snapshots"
+EOF
+
+sudo tee /etc/systemd/system/wol@.service >/dev/null <<EOF
+[Unit]
+Description=Wake-on-LAN for %i
+Requires=network.target
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/ethtool -s %i wol g
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
 EOF
 
 echo "=== Importing pacman keys ==="
@@ -119,7 +126,6 @@ sudo pacman -Syu --noconfirm
 echo "=== Installing packages ==="
 sudo pacman -S --noconfirm --needed "${ARCH_PACKAGES[@]}"
 yay -S --noconfirm --needed "${AUR_PACKAGES[@]}"
-yay -S --noconfirm --needed informant
 
 echo "=== Setting up Flatpak ==="
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -134,13 +140,13 @@ sudo systemctl enable fan2go
 sudo systemctl enable power-profiles-daemon
 sudo systemctl enable pci-latency
 sudo systemctl disable ananicy-cpp
+sudo systemctl enable wol@enp9s0.service # Caution interface name (enp9s0) might change
 
 echo "=== Removing files before stowing ==="
 rm "$HOME/.config/hypr/autostart.conf"
-rm "$HOME/.config/hypr/bindings.conf"
 rm "$HOME/.config/hypr/envs.conf"
-rm "$HOME/.config/hypr/hypridle.conf"
 rm "$HOME/.config/hypr/monitors.conf"
+rm "$HOME/.config/hypr/bindings.conf"
 
 echo "=== Running stow for user config ==="
 stow -t "$HOME" -d "$HOME/dotfiles" omarchy
@@ -156,7 +162,7 @@ sudo stow -t / -d "$HOME/dotfiles" scx_loader
 
 echo "=== Running user commands ==="
 tldr --update
-nmcli c modify "Wired connection 1" 802-3-ethernet.wake-on-lan magic
+ln --symbolic "$HOME/.steam/steam/steamapps/common/" "$HOME/Games"
 
 echo "=== Running system commands ==="
 sudo limine-mkinitcpio

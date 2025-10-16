@@ -25,10 +25,6 @@
             "name": "Steam Big Picture",
             "prep-cmd": [
                 {
-                    "do": "",
-                    "undo": "setsid steam steam://close/bigpicture"
-                },
-                {
                     "do": "/home/vee/dotfiles/scripts/sunshine-display.sh",
                     "undo": "/home/vee/dotfiles/scripts/sunshine-display.sh"
                 }

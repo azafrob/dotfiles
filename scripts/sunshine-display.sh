@@ -11,6 +11,7 @@ if grep -A5 "output = DP-1" "$CONFIG" | grep -q "disabled = false"; then
   if [ "$SUNSHINE_CLIENT_HDR" = "true" ]; then
     sed -i "/output = HDMI-A-1/,/}/ s/cm = srgb/cm = hdr/" "$CONFIG"
   fi
+  omarchy-cmd-close-all-windows
   hyprctl reload
 else
   # Switch to DP-1
@@ -21,5 +22,6 @@ else
     sed -i "/output = HDMI-A-1/,/}/ s/cm = hdr/cm = srgb/" "$CONFIG"
   fi
   hyprctl reload
+  omarchy-cmd-close-all-windows
   sleep 3 && systemctl suspend
 fi
