@@ -86,17 +86,6 @@ Type=oneshot
 WantedBy=multi-user.target
 EOF
 
-if ! grep -q "~/.config/hypr/envs.conf" ~/.config/hypr/hyprland.conf; then
-  echo "source = ~/.config/hypr/envs.conf" >> ~/.config/hypr/hyprland.conf
-fi
-
-#if ! grep -q "Steam" ~/.config/hypr/bindings.conf; then
-#  {
-#  echo 'bindd = SUPER, S, Steam, exec, uwsm app -- steam'
-#  echo 'bindd = SUPER SHIFT, S, Steam, exec, LD_AUDIT="$HOME/Downloads/SLSsteam/bin/SLSsteam.so" uwsm app -- steam'
-#  } >> ~/.config/hypr/bindings.conf
-#fi
-
 sed -i '0,/font-size: 12px;/s//font-size: 14px;/' ~/.config/waybar/style.css
 sed -i '0,/font-size = 9/s//font-size = 10/' ~/.config/ghostty/config
 
@@ -120,6 +109,10 @@ stow -t "$HOME" -d "$HOME/dotfiles" mangohud
 stow -t "$HOME" -d "$HOME/dotfiles" sunshine
 stow -t "$HOME" -d "$HOME/dotfiles" pipewire
 stow -t "$HOME" -d "$HOME/dotfiles" wireplumber
+
+if ! grep -q "~/.config/hypr/envs.conf" ~/.config/hypr/hyprland.conf; then
+  echo "source = ~/.config/hypr/envs.conf" >> ~/.config/hypr/hyprland.conf
+fi
 
 echo "=== Running stow for system config ==="
 sudo stow -t / -d "$HOME/dotfiles" fan2go
