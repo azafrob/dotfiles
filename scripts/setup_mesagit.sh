@@ -18,7 +18,7 @@ meson setup build64 --libdir lib64 --prefix $HOME/mesa-git-local -Dgallium-drive
 meson install -C build64
 cd && rm -rf mesa-git/
 
-tee $HOME/.local/share/omarchy/bin/run-mesa-git >/dev/null <<EOF
+tee $HOME/.local/bin/run-mesa-git >/dev/null <<EOF
 #!/bin/sh
 
 MESA="\$HOME/mesa-git-local" \\
@@ -27,4 +27,4 @@ VK_DRIVER_FILES="\$MESA/share/vulkan/icd.d/radeon_icd.x86_64.json" \\
 exec "\$@"
 EOF
 
-chmod +x $HOME/.local/share/omarchy/bin/run-mesa-git
+chmod +x $HOME/.local/bin/run-mesa-git

@@ -11,44 +11,88 @@ fi
 
 # Variables
 ARCH_PACKAGES=(
-  linux-cachyos
-  linux-cachyos-headers
+  #zram-generator
+  amd-ucode
+  amdgpu_top
+  aria2
+  atool
+  bambustudio-bin
+  base
+  base-devel
+  bat
+  bibata-cursor-theme
+  boxflat-git
+  brave-bin
+  btop
+  calibre
+  curl
+  ddcutil
+  discord
+  downgrade
+  easyeffects
+  ethtool
+  eza
+  fan2go-git
+  fastfetch
+  fd
+  fish
+  flatpak
+  fontconfig
+  fuse2
+  fuse3
+  fzf
+  gamescope
+  git
+  journalctl-desktop-notification
+  jq
+  kvantum
+  lact
+  layzgit
+  less
+  lib32-mangohud
+  lib32-vulkan-radeon
+  limine
+  limine-mkinitcpio-hook
+  limine-snapper-sync
+  localsend
+  luarocks
+  ludusavi
+  man-db
+  mangohud
+  micro
+  mpv
+  neovim
+  noto-fonts
+  noto-fonts-cjk
+  noto-fonts-emoji
+  noto-fonts-extra
+  nwg-look
+  protonplus
+  protontricks
+  qt5ct
+  qt6ct
+  ripgrep
+  rocm-smi-lib
+  rsync
   scx-scheds
   scx-tools
-  stow
+  snapper
+  spotify
   steam
-  yazi
-  flatpak
-  amdgpu_top
-  rocm-smi-lib
-  ethtool
-  gamescope
-  mangohud
-  lib32-mangohud
-  lact
-  vulkan-radeon
-  lib32-vulkan-radeon
-  ddcutil
-)
-
-AUR_PACKAGES=(
-  fan2go-git
+  stow
   sunshine
-  downgrade
-  bibata-cursor-theme
-  journalctl-desktop-notification
+  tldr
+  ufw
+  uwsm
+  vulkan-radeon
+  wget
+  xdg-desktop-portal-hyprland
+  yazi
+  zoxide
 )
 
 FLATPAK_PACKAGES=(
-  com.github.wwmm.easyeffects
-  org.qbittorrent.qBittorrent
-  org.jdownloader.JDownloader
-  com.vysp3r.ProtonPlus
-  com.discordapp.Discord
   com.github.tchx84.Flatseal
-  io.github.lawstorant.boxflat
-  com.bambulab.BambuStudio
-  com.github.mtkennerly.ludusavi
 )
 
 echo "=== Adding Chaotic-AUR repo ==="
@@ -64,12 +108,17 @@ echo "=== Updating system ==="
 sudo pacman -Syu --noconfirm
 
 echo "=== Installing packages ==="
-sudo pacman -S --noconfirm --needed "${ARCH_PACKAGES[@]}"
-yay -S --noconfirm --needed "${AUR_PACKAGES[@]}"
-
-echo "=== Setting up Flatpak ==="
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git /tmp/yay
+cd /tmp/yay
+makepkg -si --noconfirm
+cd
+rm -rf /tmp/yay
+yay -S --needed --noconfirm "${ARCH_PACKAGES[@]}"
 flatpak install -y "${FLATPAK_PACKAGES[@]}"
+curl -L -o SLSsteam.tar.gz https://github.com/AceSLS/SLSsteam/releases/latest/download/SLSsteam-Arch.pkg.tar.zst
+sudo pacman -U --noconfirm SLSsteam.tar.gz
+rm SLSsteam.tar.gz
 
 echo "=== Tweaking settings ==="
 sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
@@ -90,14 +139,9 @@ Type=oneshot
 WantedBy=multi-user.target
 EOF
 
-sed -i '0,/font-size: 12px;/s//font-size: 14px;/' ~/.config/waybar/style.css
-sed -i '0,/font-size = 9/s//font-size = 10/' ~/.config/ghostty/config
-
-sudo sed -i 's/BOOT_ORDER="\*, \*fallback, Snapshots"/BOOT_ORDER="*cachyos, *, *fallback, Snapshots"/' /etc/default/limine
-
 echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c31c", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/69-remapper.rules
 
-tee $HOME/.local/share/omarchy/bin/custom-trigger >/dev/null <<EOF
+tee $HOME/.local/bin/custom-trigger >/dev/null <<EOF
 #!/bin/sh
 
 (exec -a CUSTOM_TRIGGER tail -f /dev/null) &
@@ -111,7 +155,7 @@ trap cleanup EXIT
 wait \$MASTER_PID
 EOF
 
-chmod +x $HOME/.local/share/omarchy/bin/custom-trigger
+chmod +x $HOME/.local/bin/custom-trigger
 
 sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
 
