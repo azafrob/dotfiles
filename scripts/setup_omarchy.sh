@@ -1,8 +1,9 @@
 #!/bin/sh
 
+sudo -v
+
 set -euo pipefail
 
-# === Safety check: Don't run as root ===
 if [[ $EUID -eq 0 ]]; then
   echo "Error: Don't run this script as root!"
   exit 1
@@ -25,9 +26,9 @@ ARCH_PACKAGES=(
   mangohud
   lib32-mangohud
   lact
-  easyeffects
   vulkan-radeon
   lib32-vulkan-radeon
+  ddcutil
 )
 
 AUR_PACKAGES=(
@@ -39,12 +40,15 @@ AUR_PACKAGES=(
 )
 
 FLATPAK_PACKAGES=(
+  com.github.wwmm.easyeffects
   org.qbittorrent.qBittorrent
   org.jdownloader.JDownloader
   com.vysp3r.ProtonPlus
-  dev.vencord.Vesktop
+  com.discordapp.Discord
   com.github.tchx84.Flatseal
   io.github.lawstorant.boxflat
+  com.bambulab.BambuStudio
+  com.github.mtkennerly.ludusavi
 )
 
 echo "=== Adding Chaotic-AUR repo ==="
@@ -69,7 +73,7 @@ flatpak install -y "${FLATPAK_PACKAGES[@]}"
 
 echo "=== Tweaking settings ==="
 sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
-MODULES=(nct6775)
+MODULES=(nct6775 ntsync i2c-dev)
 EOF
 
 sudo tee /etc/systemd/system/wol@.service >/dev/null <<EOF
@@ -91,6 +95,26 @@ sed -i '0,/font-size = 9/s//font-size = 10/' ~/.config/ghostty/config
 
 sudo sed -i 's/BOOT_ORDER="\*, \*fallback, Snapshots"/BOOT_ORDER="*cachyos, *, *fallback, Snapshots"/' /etc/default/limine
 
+echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c31c", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/69-remapper.rules
+
+tee $HOME/.local/share/omarchy/bin/custom-trigger >/dev/null <<EOF
+#!/bin/sh
+
+(exec -a CUSTOM_TRIGGER tail -f /dev/null) &
+TRIGGER_PID=\$!
+"\$@" &
+MASTER_PID=\$!
+cleanup() {
+    kill \$TRIGGER_PID 2>/dev/null
+}
+trap cleanup EXIT
+wait \$MASTER_PID
+EOF
+
+chmod +x $HOME/.local/share/omarchy/bin/custom-trigger
+
+sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
+
 echo "=== Enabling/disabling services ==="
 sudo systemctl enable scx_loader
 sudo systemctl enable lactd
@@ -107,8 +131,7 @@ echo "=== Running stow for user config ==="
 stow -t "$HOME" -d "$HOME/dotfiles" hypr
 stow -t "$HOME" -d "$HOME/dotfiles" mangohud
 stow -t "$HOME" -d "$HOME/dotfiles" sunshine
-stow -t "$HOME" -d "$HOME/dotfiles" pipewire
-stow -t "$HOME" -d "$HOME/dotfiles" wireplumber
+stow -t "$HOME" -d "$HOME/dotfiles" frogminer
 
 if ! grep -q "~/.config/hypr/envs.conf" ~/.config/hypr/hyprland.conf; then
   echo "source = ~/.config/hypr/envs.conf" >> ~/.config/hypr/hyprland.conf

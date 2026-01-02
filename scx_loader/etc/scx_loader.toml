@@ -1,5 +1,5 @@
 default_sched = "scx_bpfland"
-default_mode = "Gaming"
+default_mode = "Auto"
 
 [scheds.scx_rustland]
 auto_mode = []
