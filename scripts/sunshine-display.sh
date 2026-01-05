@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 CONFIG="$HOME/.config/hypr/monitors.conf"
 

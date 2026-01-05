@@ -15,6 +15,7 @@ config.initial_rows = 28
 -- or, changing the font size and color scheme.
 config.font_size = 10
 config.color_scheme = "Noctalia"
+config.term = "wezterm"
 
 -- Finally, return the configuration to wezterm:
 return config

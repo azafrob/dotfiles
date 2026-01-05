@@ -37,7 +37,7 @@
         "marginVertical": 0.25,
         "monitors": [
         ],
-        "outerCorners": false,
+        "outerCorners": true,
         "position": "top",
         "showCapsule": true,
         "showOutline": false,
@@ -217,8 +217,8 @@
         "generateTemplatesForPredefined": true,
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
-        "matugenSchemeType": "scheme-rainbow",
-        "predefinedScheme": "Noctalia (default)",
+        "matugenSchemeType": "scheme-content",
+        "predefinedScheme": "Tokyo Night",
         "schedulingMode": "off",
         "useWallpaperColors": true
     },

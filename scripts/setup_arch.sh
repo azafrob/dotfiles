@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 sudo -v
 
@@ -20,7 +20,6 @@ base-devel
 bat
 bibata-cursor-theme
 boxflat-git
-brave-bin
 btop
 calibre
 cava
@@ -44,6 +43,7 @@ jq
 kvantum
 lact
 layzgit
+lazygit
 less
 limine-mkinitcpio-hook
 limine-snapper-sync
@@ -79,17 +79,22 @@ rocm-smi-lib
 rsync
 scx-scheds
 scx-tools
+spicetify-cli
 spotify
 steam
 stow
 sunshine
 terminus-font
 tldr
+tree
 tree-sitter-cli
 ufw
 wezterm-git
 wlsunset
 xdg-desktop-portal-gtk
+xdotool
+xorg-xwininfo
+yad
 yazi
 zen-browser-bin
 zenergy-dkms-git
@@ -98,6 +103,7 @@ zoxide
 
 FLATPAK_PACKAGES=(
 com.github.tchx84.Flatseal
+it.mijorus.gearlever
 )
 
 echo "=== Adding Chaotic-AUR repo ==="
@@ -122,17 +128,20 @@ rm -rf /tmp/yay
 
 yay -S --needed --noconfirm "${ARCH_PACKAGES[@]}"
 
-flatpak install -y "${FLATPAK_PACKAGES[@]}"
+flatpak install --or-update -y "${FLATPAK_PACKAGES[@]}"
+
+curl -fsSL https://raw.githubusercontent.com/getnf/getnf/main/install.sh | bash
+getnf -i JetBrainsMono
 
 curl -L -o SLSsteam.tar.gz https://github.com/AceSLS/SLSsteam/releases/latest/download/SLSsteam-Arch.pkg.tar.zst
 sudo pacman -U --noconfirm SLSsteam.tar.gz
 rm SLSsteam.tar.gz
 
-curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source
-fisher install jorgebucaran/fisher
-fisher install IlanCosman/tide@v6
+fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher && fisher install IlanCosman/tide@v6"
 
 sh -c "$(curl -sS https://vencord.dev/install.sh)"
+
+curl -fsSL https://opencode.ai/install | bash
 
 echo "=== Tweaking settings ==="
 sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
@@ -152,7 +161,7 @@ rm $HOME/.config/kwalletrc
 echo -e "[Wallet]\nEnabled=false" >> ~/.config/kwalletrc
 
 tee $HOME/.local/bin/custom-trigger >/dev/null <<EOF
-#!/bin/sh
+#!/bin/bash
 
 (exec -a CUSTOM_TRIGGER tail -f /dev/null) &
 TRIGGER_PID=\$!
@@ -167,10 +176,15 @@ EOF
 
 chmod +x $HOME/.local/bin/custom-trigger
 
+sudo chmod a+wr /opt/spotify
+sudo chmod a+wr /opt/spotify/Apps -R
+spicetify backup apply
+
 sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
 
 if grep -q "^FONT=" /etc/vconsole.conf; then
-	sed -i "s/^FONT=.*/FONT=ter-v32n/" /etc/vconsole.conf; else
+	sed -i "s/^FONT=.*/FONT=ter-v32n/" /etc/vconsole.conf
+else
 	echo "FONT=ter-v32n" >> /etc/vconsole.conf;
 fi
 
@@ -178,7 +192,7 @@ echo "=== Enabling/disabling services ==="
 sudo systemctl enable scx_loader lactd fan2go
 
 echo "=== Running stow for user config ==="
-stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus
+stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus qt6ct
 
 echo "=== Running stow for system config ==="
 sudo stow --no-folding -t / -d "$HOME/dotfiles" fan2go scx_loader ly

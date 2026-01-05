@@ -2,5 +2,4 @@
 *.lock
 *.log
 .gitconfig
-sunshine/.config/sunshine/credentials/cacert.pem
-sunshine/.config/sunshine/credentials/cakey.pem
+AGENTS.md

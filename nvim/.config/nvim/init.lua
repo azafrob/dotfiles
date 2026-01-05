@@ -802,6 +802,7 @@ require("lazy").setup({
 			-- Load the colorscheme here.
 			-- Like many other themes, this one has different styles, and you could load
 			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+			vim.opt.termguicolors = false
 			vim.cmd.colorscheme("default")
 		end,
 	},
@@ -994,7 +995,4 @@ require("lazy").setup({
 	},
 })
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
-vim.opt.termguicolors = true
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+-- vim: ts=4 sts=4 sw=4 et
