@@ -9,13 +9,13 @@ while true; do
         if [ "$CURRENT_STATE" != "Gaming" ]; then
             lact cli profile set Gaming || true
             powerprofilesctl set performance
-            CURRENT_STATE="Gaming" # Actualizamos el estado
+            CURRENT_STATE="Gaming"
         fi
     else
         if [ "$CURRENT_STATE" != "Default" ]; then
             lact cli profile set Default || true
             powerprofilesctl set power-saver
-            CURRENT_STATE="Default" # Actualizamos el estado
+            CURRENT_STATE="Default"
         fi
     fi
     sleep $SLEEP_TIME

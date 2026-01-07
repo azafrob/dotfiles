@@ -217,8 +217,8 @@
         "generateTemplatesForPredefined": true,
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
-        "matugenSchemeType": "scheme-content",
-        "predefinedScheme": "Tokyo Night",
+        "matugenSchemeType": "scheme-neutral",
+        "predefinedScheme": "Noctalia (default)",
         "schedulingMode": "off",
         "useWallpaperColors": true
     },
@@ -521,9 +521,9 @@
     },
     "ui": {
         "boxBorderEnabled": false,
-        "fontDefault": "JetBrains Mono",
+        "fontDefault": "Noto Sans",
         "fontDefaultScale": 1,
-        "fontFixed": "JetBrains Mono",
+        "fontFixed": "Noto Sans Mono",
         "fontFixedScale": 1,
         "panelBackgroundOpacity": 0.9,
         "panelsAttachedToBar": true,

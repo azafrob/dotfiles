@@ -9,7 +9,6 @@ if [[ $EUID -eq 0 ]]; then
 	exit 1
 fi
 
-# Variables
 ARCH_PACKAGES=(
 adw-gtk-theme
 amdgpu_top
@@ -32,6 +31,7 @@ eza
 fan2go-git
 fastfetch
 fd
+feh
 fish
 flatpak
 fuse2
@@ -42,7 +42,6 @@ journalctl-desktop-notification
 jq
 kvantum
 lact
-layzgit
 lazygit
 less
 limine-mkinitcpio-hook
@@ -67,6 +66,7 @@ noto-fonts-emoji
 noto-fonts-extra
 nushell
 nwg-look
+okular
 papirus-icon-theme
 pavucontrol
 peazip
@@ -115,9 +115,6 @@ if ! grep -q "^\[chaotic-aur\]" /etc/pacman.conf; then
 	echo -e "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf
 fi
 
-echo "=== Updating system ==="
-sudo pacman -Syu --noconfirm
-
 echo "=== Installing packages ==="
 sudo pacman -S --needed git base-devel
 git clone https://aur.archlinux.org/yay.git /tmp/yay
@@ -126,12 +123,11 @@ makepkg -si --noconfirm
 cd
 rm -rf /tmp/yay
 
-yay -S --needed --noconfirm "${ARCH_PACKAGES[@]}"
+yay -Syu --needed --noconfirm "${ARCH_PACKAGES[@]}"
 
 flatpak install --or-update -y "${FLATPAK_PACKAGES[@]}"
 
 curl -fsSL https://raw.githubusercontent.com/getnf/getnf/main/install.sh | bash
-getnf -i JetBrainsMono
 
 curl -L -o SLSsteam.tar.gz https://github.com/AceSLS/SLSsteam/releases/latest/download/SLSsteam-Arch.pkg.tar.zst
 sudo pacman -U --noconfirm SLSsteam.tar.gz
@@ -148,7 +144,13 @@ sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
 MODULES=(nct6775 ntsync i2c-dev)
 EOF
 
-nmcli c modify "Wired connection 1" 802-3-ethernet.wake-on-lan magic
+# Auto-detect first wired connection for Wake-on-LAN
+NET_CONN=$(nmcli -t -f NAME,TYPE connection show | grep 'ethernet' | head -n1 | cut -d: -f1)
+if [ -n "$NET_CONN" ]; then
+    nmcli c modify "$NET_CONN" 802-3-ethernet.wake-on-lan magic
+else
+    echo "Warning: No wired network connection found, skipping Wake-on-LAN setup"
+fi
 
 echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c31c", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/69-remapper.rules
 
@@ -183,18 +185,40 @@ spicetify backup apply
 sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
 
 if grep -q "^FONT=" /etc/vconsole.conf; then
-	sed -i "s/^FONT=.*/FONT=ter-v32n/" /etc/vconsole.conf
+	sudo sed -i "s/^FONT=.*/FONT=ter-v32n/" /etc/vconsole.conf
 else
-	echo "FONT=ter-v32n" >> /etc/vconsole.conf;
+	sudo sh -c 'echo "FONT=ter-v32n" >> /etc/vconsole.conf'
 fi
 
 echo "=== Enabling/disabling services ==="
 sudo systemctl enable scx_loader lactd fan2go
 
-echo "=== Running stow for user config ==="
-stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus qt6ct
+echo "=== Configuring UFW firewall ==="
 
-echo "=== Running stow for system config ==="
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+sudo ufw allow 47984/tcp comment 'Sunshine'
+sudo ufw allow 47989/tcp comment 'Sunshine'
+sudo ufw allow 47990/tcp comment 'Sunshine web UI'
+sudo ufw allow 48010/tcp comment 'Sunshine'
+
+sudo ufw allow 47998/udp comment 'Sunshine'
+sudo ufw allow 47999/udp comment 'Sunshine'
+sudo ufw allow 48000/udp comment 'Sunshine'
+
+sudo ufw --force enable
+
+echo "=== Backing up existing configs ==="
+if [ -f "$HOME/.config/hypr/hyprland.conf" ] && [ ! -L "$HOME/.config/hypr/hyprland.conf" ]; then
+	timestamp=$(date +%Y%m%d_%H%M%S)
+	mv "$HOME/.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf.backup.$timestamp"
+	echo "Backed up hyprland.conf to hyprland.conf.backup.$timestamp"
+fi
+
+echo "=== Running stow for user config ==="
+stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus qt6ct yazi bat fish nvim wezterm xdg
+
 sudo stow --no-folding -t / -d "$HOME/dotfiles" fan2go scx_loader ly
 
 echo "=== Running user commands ==="
@@ -205,3 +229,7 @@ echo "=== Running system commands ==="
 sudo limine-mkinitcpio
 
 echo "=== Done! ==="
+read -p "Would you like to reboot now? (y/n): " reboot_choice
+if [[ "$reboot_choice" =~ ^[Yy]$ ]]; then
+    sudo reboot
+fi

@@ -1,0 +1,157 @@
+[Added Associations]
+# Web Browsing
+text/html=zen.desktop;
+application/xhtml+xml=zen.desktop;
+application/x-extension-htm=zen.desktop;
+application/x-extension-html=zen.desktop;
+application/x-extension-shtml=zen.desktop;
+application/x-extension-xhtml=zen.desktop;
+application/x-extension-xht=zen.desktop;
+x-scheme-handler/http=zen.desktop;
+x-scheme-handler/https=zen.desktop;
+x-scheme-handler/about=zen.desktop;
+
+# File Management
+inode/directory=org.kde.dolphin.desktop;
+application/x-directory=org.kde.dolphin.desktop;
+
+# Text Editing
+text/plain=nvim.desktop;
+text/x-csrc=nvim.desktop;
+text/x-c++src=nvim.desktop;
+text/x-chdr=nvim.desktop;
+text/x-c++hdr=nvim.desktop;
+text/x-script.python=nvim.desktop;
+text/x-script.perl=nvim.desktop;
+text/x-script.shell=nvim.desktop;
+
+# Images
+image/jpeg=feh.desktop;
+image/png=feh.desktop;
+image/gif=feh.desktop;
+image/svg+xml=feh.desktop;
+image/webp=feh.desktop;
+image/x-png=feh.desktop;
+image/x-bmp=feh.desktop;
+image/x-xpixmap=feh.desktop;
+
+# Media - Video
+video/mp4=mpv.desktop;
+video/mpeg=mpv.desktop;
+video/quicktime=mpv.desktop;
+video/x-matroska=mpv.desktop;
+video/webm=mpv.desktop;
+
+# Media - Audio
+audio/mpeg=mpv.desktop;
+audio/flac=mpv.desktop;
+audio/ogg=mpv.desktop;
+audio/x-wav=mpv.desktop;
+x-scheme-handler/spotify=spotify.desktop;
+
+# PDF/Documents
+application/pdf=org.kde.okular.desktop;
+application/x-pdf=org.kde.okular.desktop;
+application/x-bzpdf=org.kde.okular.desktop;
+application/x-gzpdf=org.kde.okular.desktop;
+
+# Archives
+application/zip=peazip.desktop;
+application/x-rar-compressed=peazip.desktop;
+application/x-7z-compressed=peazip.desktop;
+application/x-tar=peazip.desktop;
+application/x-gzip=peazip.desktop;
+application/x-bzip2=peazip.desktop;
+
+# E-books
+application/epub+zip=calibre-gui.desktop;
+application/x-mobipocket-ebook=calibre-gui.desktop;
+
+# Communication
+x-scheme-handler/discord=discord.desktop;
+
+# File Sharing
+x-scheme-handler/localsend=localsend.desktop;
+
+# Steam (gaming)
+x-scheme-handler/steam=steam.desktop;
+x-scheme-handler/steamlink=steam.desktop;
+
+[Default Applications]
+# Web Browsing
+text/html=zen.desktop
+application/xhtml+xml=zen.desktop
+application/x-extension-htm=zen.desktop
+application/x-extension-html=zen.desktop
+application/x-extension-shtml=zen.desktop
+application/x-extension-xhtml=zen.desktop
+application/x-extension-xht=zen.desktop
+x-scheme-handler/http=zen.desktop
+x-scheme-handler/https=zen.desktop
+x-scheme-handler/about=zen.desktop
+
+# File Management
+inode/directory=org.kde.dolphin.desktop
+application/x-directory=org.kde.dolphin.desktop
+
+# Text Editing
+text/plain=nvim.desktop
+text/x-csrc=nvim.desktop
+text/x-c++src=nvim.desktop
+text/x-chdr=nvim.desktop
+text/x-c++hdr=nvim.desktop
+text/x-script.python=nvim.desktop
+text/x-script.perl=nvim.desktop
+text/x-script.shell=nvim.desktop
+
+# Images
+image/jpeg=feh.desktop
+image/png=feh.desktop
+image/gif=feh.desktop
+image/svg+xml=feh.desktop
+image/webp=feh.desktop
+image/x-png=feh.desktop
+image/x-bmp=feh.desktop
+image/x-xpixmap=feh.desktop
+
+# Media - Video
+video/mp4=mpv.desktop
+video/mpeg=mpv.desktop
+video/quicktime=mpv.desktop
+video/x-matroska=mpv.desktop
+video/webm=mpv.desktop
+
+# Media - Audio
+audio/mpeg=mpv.desktop
+audio/flac=mpv.desktop
+audio/ogg=mpv.desktop
+audio/x-wav=mpv.desktop
+x-scheme-handler/spotify=spotify.desktop
+
+# PDF/Documents
+application/pdf=org.kde.okular.desktop
+application/x-pdf=org.kde.okular.desktop
+application/x-bzpdf=org.kde.okular.desktop
+application/x-gzpdf=org.kde.okular.desktop
+
+# Archives
+application/zip=peazip.desktop
+application/x-rar-compressed=peazip.desktop
+application/x-7z-compressed=peazip.desktop
+application/x-tar=peazip.desktop
+application/x-gzip=peazip.desktop
+application/x-bzip2=peazip.desktop
+
+# E-books
+application/epub+zip=calibre-gui.desktop
+application/x-mobipocket-ebook=calibre-gui.desktop
+
+# Communication
+x-scheme-handler/discord=discord.desktop
+
+# File Sharing
+x-scheme-handler/localsend=localsend.desktop
+
+# Steam (gaming)
+x-scheme-handler/steam=steam.desktop
+x-scheme-handler/steamlink=steam.desktop
