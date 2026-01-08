@@ -28,6 +28,7 @@ discord
 downgrade
 easyeffects
 eza
+edk2-ovmf
 fan2go-git
 fastfetch
 fd
@@ -46,6 +47,7 @@ lazygit
 less
 limine-mkinitcpio-hook
 limine-snapper-sync
+libvirt
 linux
 linux-headers
 linux-zen
@@ -75,6 +77,7 @@ protonplus
 protontricks
 python-pywalfox
 qt6ct-kde
+qemu-desktop
 rocm-smi-lib
 rsync
 scx-scheds
@@ -84,15 +87,18 @@ spotify
 steam
 stow
 sunshine
+swtpm
 terminus-font
 tldr
 tree
 tree-sitter-cli
 ufw
 wezterm-git
+virt-manager
 wlsunset
 xdg-desktop-portal-gtk
 xdotool
+virtio-win
 xorg-xwininfo
 yad
 yazi
@@ -144,7 +150,6 @@ sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
 MODULES=(nct6775 ntsync i2c-dev)
 EOF
 
-# Auto-detect first wired connection for Wake-on-LAN
 NET_CONN=$(nmcli -t -f NAME,TYPE connection show | grep 'ethernet' | head -n1 | cut -d: -f1)
 if [ -n "$NET_CONN" ]; then
     nmcli c modify "$NET_CONN" 802-3-ethernet.wake-on-lan magic
@@ -155,6 +160,8 @@ fi
 echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c31c", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/69-remapper.rules
 
 chsh -s /usr/bin/fish
+
+sudo usermod -aG libvirt "$USER"
 
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
@@ -191,10 +198,9 @@ else
 fi
 
 echo "=== Enabling/disabling services ==="
-sudo systemctl enable scx_loader lactd fan2go
+sudo systemctl enable scx_loader lactd fan2go libvirtd virtlogd
 
 echo "=== Configuring UFW firewall ==="
-
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
@@ -202,12 +208,32 @@ sudo ufw allow 47984/tcp comment 'Sunshine'
 sudo ufw allow 47989/tcp comment 'Sunshine'
 sudo ufw allow 47990/tcp comment 'Sunshine web UI'
 sudo ufw allow 48010/tcp comment 'Sunshine'
-
 sudo ufw allow 47998/udp comment 'Sunshine'
 sudo ufw allow 47999/udp comment 'Sunshine'
 sudo ufw allow 48000/udp comment 'Sunshine'
+sudo ufw allow 5900:5910/tcp comment 'VM console (Spice/VNC)'
 
 sudo ufw --force enable
+
+echo "=== Configuring libvirt network ==="
+if [ -f /etc/libvirt/qemu/networks/default.xml ]; then
+	if ! virsh net-list --all | grep -q "default"; then
+		sudo virsh net-define /etc/libvirt/qemu/networks/default.xml
+		echo "Defined default libvirt network"
+	fi
+	
+	if ! virsh net-list | grep -q "default.*active"; then
+		sudo virsh net-start default
+		echo "Started default libvirt network"
+	fi
+	
+	if ! virsh net-list --name | grep -q "default"; then
+		sudo virsh net-autostart default
+		echo "Set default libvirt network to autostart"
+	fi
+else
+	echo "Warning: Default network XML not found, may need manual setup"
+fi
 
 echo "=== Backing up existing configs ==="
 if [ -f "$HOME/.config/hypr/hyprland.conf" ] && [ ! -L "$HOME/.config/hypr/hyprland.conf" ]; then
@@ -231,5 +257,5 @@ sudo limine-mkinitcpio
 echo "=== Done! ==="
 read -p "Would you like to reboot now? (y/n): " reboot_choice
 if [[ "$reboot_choice" =~ ^[Yy]$ ]]; then
-    sudo reboot
+	sudo reboot
 fi

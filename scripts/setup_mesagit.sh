@@ -5,8 +5,8 @@ sudo -v
 set -euo pipefail
 
 if [[ $EUID -eq 0 ]]; then
-  echo "Error: Don't run this script as root!"
-  exit 1
+	echo "Error: Don't run this script as root!"
+	exit 1
 fi
 
 cd && rm -rf mesa-git/ mesa-git-local/
