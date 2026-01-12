@@ -1,1 +1,1 @@
-{"gpus":{"1002:7550-148C:2435-0000:03:00.0":{"fan_control_enabled":false,"pmfw_options":{"zero_rpm":true},"power_cap":212.0,"performance_level":"low","voltage_offset":-60}}}
+{"gpus":{"1002:7550-148C:2435-0000:03:00.0":{"fan_control_enabled":false,"pmfw_options":{"zero_rpm":true},"power_cap":220.0,"performance_level":"low","voltage_offset":-60}}}

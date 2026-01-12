@@ -8,8 +8,8 @@
             "name": "Desktop",
             "prep-cmd": [
                 {
-                    "do": "$(HOME)/dotfiles/scripts/sunshine-display.sh",
-                    "undo": "$(HOME)/dotfiles/scripts/sunshine-display.sh"
+                    "do": "sunshine_display.sh",
+                    "undo": "sunshine_display.sh"
                 }
             ],
             "wait-all": true
@@ -25,8 +25,8 @@
             "name": "Steam Big Picture",
             "prep-cmd": [
                 {
-                    "do": "$(HOME)/dotfiles/scripts/sunshine-display.sh",
-                    "undo": "$(HOME)/dotfiles/scripts/sunshine-display.sh"
+                    "do": "sunshine_display.sh",
+                    "undo": "sunshine_display.sh"
                 }
             ],
             "wait-all": true

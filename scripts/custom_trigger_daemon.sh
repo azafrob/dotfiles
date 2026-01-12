@@ -10,7 +10,7 @@ while true; do
 			lact cli profile set Gaming
 			powerprofilesctl set performance
 			qs -c noctalia-shell ipc call notifications enableDND
-			qs -c noctalia-shell ipc call idleInhibitor toggle
+			qs -c noctalia-shell ipc call idleInhibitor enable
 			CURRENT_STATE="Gaming"
 		fi
 	else
@@ -18,7 +18,7 @@ while true; do
 			lact cli profile set Default
 			powerprofilesctl set power-saver
 			qs -c noctalia-shell ipc call notifications disableDND
-			qs -c noctalia-shell ipc call idleInhibitor toggle
+			qs -c noctalia-shell ipc call idleInhibitor disable
 			CURRENT_STATE="Default"
 		fi
 	fi

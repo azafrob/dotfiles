@@ -17,14 +17,3 @@ cd src/mesa
 meson setup build64 --libdir lib64 --prefix $HOME/mesa-git-local -Dgallium-drivers=radeonsi,zink,svga,softpipe,llvmpipe -Dvulkan-drivers=amd,swrast -Dbuildtype=release -Dvideo-codecs=all
 meson install -C build64
 cd && rm -rf mesa-git/
-
-tee $HOME/.local/bin/run-mesa-git >/dev/null <<EOF
-#!/bin/sh
-
-MESA="\$HOME/mesa-git-local" \\
-LD_LIBRARY_PATH="\$MESA/lib64" \\
-VK_DRIVER_FILES="\$MESA/share/vulkan/icd.d/radeon_icd.x86_64.json" \\
-exec "\$@"
-EOF
-
-chmod +x $HOME/.local/bin/run-mesa-git

@@ -69,13 +69,14 @@ noto-fonts-extra
 nushell
 nwg-look
 okular
+onlyoffice-bin
+opencode-bin
 papirus-icon-theme
 pavucontrol
 peazip
 power-profiles-daemon
 protonplus
 protontricks
-python-pywalfox
 qt6ct-kde
 qemu-desktop
 rocm-smi-lib
@@ -122,28 +123,18 @@ if ! grep -q "^\[chaotic-aur\]" /etc/pacman.conf; then
 fi
 
 echo "=== Installing packages ==="
-sudo pacman -S --needed git base-devel
+sudo pacman -S --needed git base-devel reflector
 git clone https://aur.archlinux.org/yay.git /tmp/yay
 cd /tmp/yay
 makepkg -si --noconfirm
 cd
 rm -rf /tmp/yay
 
+sudo reflector --latest 20 --fastest 10 --sort rate --protocol https --save /etc/pacman.d/mirrorlist
+
 yay -Syu --needed --noconfirm "${ARCH_PACKAGES[@]}"
 
 flatpak install --or-update -y "${FLATPAK_PACKAGES[@]}"
-
-curl -fsSL https://raw.githubusercontent.com/getnf/getnf/main/install.sh | bash
-
-curl -L -o SLSsteam.tar.gz https://github.com/AceSLS/SLSsteam/releases/latest/download/SLSsteam-Arch.pkg.tar.zst
-sudo pacman -U --noconfirm SLSsteam.tar.gz
-rm SLSsteam.tar.gz
-
-fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher && fisher install IlanCosman/tide@v6"
-
-sh -c "$(curl -sS https://vencord.dev/install.sh)"
-
-curl -fsSL https://opencode.ai/install | bash
 
 echo "=== Tweaking settings ==="
 sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
@@ -169,22 +160,6 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 rm $HOME/.config/kwalletrc
 echo -e "[Wallet]\nEnabled=false" >> ~/.config/kwalletrc
 
-tee $HOME/.local/bin/custom-trigger >/dev/null <<EOF
-#!/bin/bash
-
-(exec -a CUSTOM_TRIGGER tail -f /dev/null) &
-TRIGGER_PID=\$!
-"\$@" &
-MASTER_PID=\$!
-cleanup() {
-kill \$TRIGGER_PID 2>/dev/null
-}
-trap cleanup EXIT
-wait \$MASTER_PID
-EOF
-
-chmod +x $HOME/.local/bin/custom-trigger
-
 sudo chmod a+wr /opt/spotify
 sudo chmod a+wr /opt/spotify/Apps -R
 spicetify backup apply
@@ -198,7 +173,7 @@ else
 fi
 
 echo "=== Enabling/disabling services ==="
-sudo systemctl enable scx_loader lactd fan2go libvirtd virtlogd
+sudo systemctl enable ufw scx_loader lactd fan2go libvirtd virtlogd
 
 echo "=== Configuring UFW firewall ==="
 sudo ufw default deny incoming
@@ -237,15 +212,13 @@ fi
 
 echo "=== Backing up existing configs ==="
 if [ -f "$HOME/.config/hypr/hyprland.conf" ] && [ ! -L "$HOME/.config/hypr/hyprland.conf" ]; then
-	timestamp=$(date +%Y%m%d_%H%M%S)
-	mv "$HOME/.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf.backup.$timestamp"
-	echo "Backed up hyprland.conf to hyprland.conf.backup.$timestamp"
+	mv "$HOME/.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf.bak"
 fi
 
 echo "=== Running stow for user config ==="
-stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus qt6ct yazi bat fish nvim wezterm xdg
+stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus qt6ct yazi bat fish nvim wezterm xdg mpv
 
-sudo stow --no-folding -t / -d "$HOME/dotfiles" fan2go scx_loader ly
+sudo stow --no-folding -t / -d "$HOME/dotfiles" fan2go scx_loader
 
 echo "=== Running user commands ==="
 tldr --update
@@ -254,7 +227,17 @@ ln --symbolic "$HOME/.steam/steam/steamapps/common/" "$HOME/Games"
 echo "=== Running system commands ==="
 sudo limine-mkinitcpio
 
-echo "=== Done! ==="
+echo "=== Post-setup ==="
+fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher && fisher install IlanCosman/tide@v6"
+
+sh -c "$(curl -sS https://vencord.dev/install.sh)"
+
+curl -L -o SLSsteam.tar.gz https://github.com/AceSLS/SLSsteam/releases/latest/download/SLSsteam-Arch.pkg.tar.zst
+sudo pacman -U --noconfirm SLSsteam.tar.gz
+rm SLSsteam.tar.gz
+
+yay -S informant
+
 read -p "Would you like to reboot now? (y/n): " reboot_choice
 if [[ "$reboot_choice" =~ ^[Yy]$ ]]; then
 	sudo reboot
