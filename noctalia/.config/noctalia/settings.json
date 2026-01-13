@@ -125,7 +125,7 @@
                     "useFixedWidth": false
                 },
                 {
-                    "compactMode": false,
+                    "compactMode": true,
                     "compactShowAlbumArt": true,
                     "compactShowVisualizer": false,
                     "hideMode": "hidden",
@@ -520,7 +520,7 @@
         "fontDefaultScale": 1,
         "fontFixed": "Noto Sans Mono",
         "fontFixedScale": 1,
-        "networkPanelView": "wifi",
+        "networkPanelView": "ethernet",
         "panelBackgroundOpacity": 0.9,
         "panelsAttachedToBar": true,
         "settingsPanelMode": "attached",
