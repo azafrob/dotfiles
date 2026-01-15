@@ -81,6 +81,7 @@ qt6ct-kde
 qemu-desktop
 rocm-smi-lib
 rsync
+rclone
 scx-scheds
 scx-tools
 spicetify-cli
