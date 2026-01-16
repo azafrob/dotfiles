@@ -14,6 +14,7 @@ adw-gtk-theme
 amdgpu_top
 aria2
 atool
+atuin
 bambustudio-bin
 base-devel
 bat
