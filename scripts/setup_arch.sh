@@ -34,11 +34,12 @@ fan2go-git
 fastfetch
 fd
 feh
-fish
 flatpak
+freecad
 fuse2
 fzf
 gamescope
+getnf
 hyprpolkitagent
 journalctl-desktop-notification
 jq
@@ -59,7 +60,6 @@ ludusavi
 man-db
 mangohud
 matugen
-micro
 mpv
 neovim
 noctalia-shell
@@ -67,7 +67,6 @@ noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
 noto-fonts-extra
-nushell
 nwg-look
 okular
 onlyoffice-bin
@@ -93,14 +92,17 @@ sunshine
 swtpm
 terminus-font
 tldr
+trash-cli
 tree
 tree-sitter-cli
 ufw
 wezterm-git
 virt-manager
+wgcf
 wlsunset
 xdg-desktop-portal-gtk
 xdotool
+veracrypt
 virtio-win
 xorg-xwininfo
 yad
@@ -108,6 +110,7 @@ yazi
 zen-browser-bin
 zenergy-dkms-git
 zoxide
+zsh
 )
 
 FLATPAK_PACKAGES=(
@@ -152,7 +155,7 @@ fi
 
 echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c31c", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/69-remapper.rules
 
-chsh -s /usr/bin/fish
+chsh -s /usr/bin/zsh
 
 sudo usermod -aG libvirt "$USER"
 
@@ -161,10 +164,6 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 rm $HOME/.config/kwalletrc
 echo -e "[Wallet]\nEnabled=false" >> ~/.config/kwalletrc
-
-sudo chmod a+wr /opt/spotify
-sudo chmod a+wr /opt/spotify/Apps -R
-spicetify backup apply
 
 sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
 
@@ -189,6 +188,7 @@ sudo ufw allow 47998/udp comment 'Sunshine'
 sudo ufw allow 47999/udp comment 'Sunshine'
 sudo ufw allow 48000/udp comment 'Sunshine'
 sudo ufw allow 5900:5910/tcp comment 'VM console (Spice/VNC)'
+sudo ufw allow 53317 comment 'LocalSend;
 
 sudo ufw --force enable
 
@@ -218,7 +218,7 @@ if [ -f "$HOME/.config/hypr/hyprland.conf" ] && [ ! -L "$HOME/.config/hypr/hyprl
 fi
 
 echo "=== Running stow for user config ==="
-stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus qt6ct yazi bat fish nvim wezterm xdg mpv
+stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus qt6ct yazi bat zsh nvim wezterm xdg mpv
 
 sudo stow --no-folding -t / -d "$HOME/dotfiles" fan2go scx_loader
 
@@ -230,9 +230,13 @@ echo "=== Running system commands ==="
 sudo limine-mkinitcpio
 
 echo "=== Post-setup ==="
-fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher && fisher install IlanCosman/tide@v6"
+zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-v1 --keep
 
 sh -c "$(curl -sS https://vencord.dev/install.sh)"
+
+sudo chmod a+wr /opt/spotify
+sudo chmod a+wr /opt/spotify/Apps -R
+spicetify backup apply
 
 curl -L -o SLSsteam.tar.gz https://github.com/AceSLS/SLSsteam/releases/latest/download/SLSsteam-Arch.pkg.tar.zst
 sudo pacman -U --noconfirm SLSsteam.tar.gz
