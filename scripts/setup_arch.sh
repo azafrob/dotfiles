@@ -162,7 +162,7 @@ sudo usermod -aG libvirt "$USER"
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
-rm $HOME/.config/kwalletrc
+rm "$HOME/.config/kwalletrc"
 echo -e "[Wallet]\nEnabled=false" >> ~/.config/kwalletrc
 
 sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
@@ -188,7 +188,7 @@ sudo ufw allow 47998/udp comment 'Sunshine'
 sudo ufw allow 47999/udp comment 'Sunshine'
 sudo ufw allow 48000/udp comment 'Sunshine'
 sudo ufw allow 5900:5910/tcp comment 'VM console (Spice/VNC)'
-sudo ufw allow 53317 comment 'LocalSend;
+sudo ufw allow 53317 comment 'LocalSend'
 
 sudo ufw --force enable
 
@@ -244,7 +244,7 @@ rm SLSsteam.tar.gz
 
 yay -S informant
 
-read -p "Would you like to reboot now? (y/n): " reboot_choice
+read -rp "Would you like to reboot now? (y/n): " reboot_choice
 if [[ "$reboot_choice" =~ ^[Yy]$ ]]; then
 	sudo reboot
 fi
