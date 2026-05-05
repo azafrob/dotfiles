@@ -9,14 +9,21 @@ if [[ $EUID -eq 0 ]]; then
 	exit 1
 fi
 
-ARCH_PACKAGES=(
+HYPRLAND_PACKAGES=(
 adw-gtk-theme
+hyprpolkitagent
+journalctl-desktop-notification
+noctalia-shell
+nwg-look
+qt6ct-kde
+wlsunset
+xdg-desktop-portal-gtk
+)
+
+ARCH_PACKAGES=(
 amdgpu_top
-aria2
 atool
 atuin
-bambustudio-bin
-base-devel
 bat
 bibata-cursor-theme
 boxflat-git
@@ -29,59 +36,39 @@ discord
 downgrade
 easyeffects
 eza
-edk2-ovmf
 fan2go-git
 fastfetch
 fd
 feh
 flatpak
-freecad
 fuse2
 fzf
 gamescope
 getnf
-hyprpolkitagent
-journalctl-desktop-notification
 jq
-kvantum
 lact
 lazygit
 less
-limine-mkinitcpio-hook
-limine-snapper-sync
-libvirt
-linux
-linux-headers
 linux-zen
 linux-zen-headers
+limine-mkinitcpio-hook
+limine-snapper-sync
 localsend
 luarocks
 ludusavi
 man-db
 mangohud
-matugen
 mpv
 neovim
-noctalia-shell
-noto-fonts
-noto-fonts-cjk
-noto-fonts-emoji
-noto-fonts-extra
-nwg-look
 okular
-onlyoffice-bin
-opencode-bin
 papirus-icon-theme
-pavucontrol
 peazip
 power-profiles-daemon
 protonplus
 protontricks
-qt6ct-kde
-qemu-desktop
+rclone
 rocm-smi-lib
 rsync
-rclone
 scx-scheds
 scx-tools
 spicetify-cli
@@ -89,22 +76,14 @@ spotify
 steam
 stow
 sunshine
-swtpm
-terminus-font
 tldr
 trash-cli
 tree
 tree-sitter-cli
 ufw
-wezterm-git
-virt-manager
-wgcf
-wlsunset
-xdg-desktop-portal-gtk
-xdotool
 veracrypt
-virtio-win
-xorg-xwininfo
+wezterm
+wgcf
 yad
 yazi
 zen-browser-bin
@@ -138,12 +117,13 @@ rm -rf /tmp/yay
 sudo reflector --latest 20 --fastest 10 --sort rate --protocol https --save /etc/pacman.d/mirrorlist
 
 yay -Syu --needed --noconfirm "${ARCH_PACKAGES[@]}"
+yay -Syu --needed --noconfirm "${HYPRLAND_PACKAGES[@]}"
 
 flatpak install --or-update -y "${FLATPAK_PACKAGES[@]}"
 
 echo "=== Tweaking settings ==="
 sudo tee /etc/mkinitcpio.conf.d/custom.conf >/dev/null <<EOF
-MODULES=(nct6775 ntsync i2c-dev)
+MODULES=(nct6775 i2c-dev)
 EOF
 
 NET_CONN=$(nmcli -t -f NAME,TYPE connection show | grep 'ethernet' | head -n1 | cut -d: -f1)
@@ -156,8 +136,6 @@ fi
 echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c31c", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/69-remapper.rules
 
 chsh -s /usr/bin/zsh
-
-sudo usermod -aG libvirt "$USER"
 
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
@@ -174,7 +152,7 @@ else
 fi
 
 echo "=== Enabling/disabling services ==="
-sudo systemctl enable ufw scx_loader lactd fan2go libvirtd virtlogd
+sudo systemctl enable ufw scx_loader lactd fan2go
 
 echo "=== Configuring UFW firewall ==="
 sudo ufw default deny incoming
@@ -182,35 +160,14 @@ sudo ufw default allow outgoing
 
 sudo ufw allow 47984/tcp comment 'Sunshine'
 sudo ufw allow 47989/tcp comment 'Sunshine'
-sudo ufw allow 47990/tcp comment 'Sunshine web UI'
+sudo ufw allow 47990/tcp comment 'Sunshine'
 sudo ufw allow 48010/tcp comment 'Sunshine'
 sudo ufw allow 47998/udp comment 'Sunshine'
 sudo ufw allow 47999/udp comment 'Sunshine'
 sudo ufw allow 48000/udp comment 'Sunshine'
-sudo ufw allow 5900:5910/tcp comment 'VM console (Spice/VNC)'
 sudo ufw allow 53317 comment 'LocalSend'
 
 sudo ufw --force enable
-
-echo "=== Configuring libvirt network ==="
-if [ -f /etc/libvirt/qemu/networks/default.xml ]; then
-	if ! virsh net-list --all | grep -q "default"; then
-		sudo virsh net-define /etc/libvirt/qemu/networks/default.xml
-		echo "Defined default libvirt network"
-	fi
-	
-	if ! virsh net-list | grep -q "default.*active"; then
-		sudo virsh net-start default
-		echo "Started default libvirt network"
-	fi
-	
-	if ! virsh net-list --name | grep -q "default"; then
-		sudo virsh net-autostart default
-		echo "Set default libvirt network to autostart"
-	fi
-else
-	echo "Warning: Default network XML not found, may need manual setup"
-fi
 
 echo "=== Backing up existing configs ==="
 if [ -f "$HOME/.config/hypr/hyprland.conf" ] && [ ! -L "$HOME/.config/hypr/hyprland.conf" ]; then
@@ -218,7 +175,8 @@ if [ -f "$HOME/.config/hypr/hyprland.conf" ] && [ ! -L "$HOME/.config/hypr/hyprl
 fi
 
 echo "=== Running stow for user config ==="
-stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr mangohud sunshine frogminer btop micro noctalia menus qt6ct yazi bat zsh nvim wezterm xdg mpv
+stow --no-folding -t "$HOME" -d "$HOME/dotfiles" mangohud sunshine frogminer btop yazi bat zsh nvim wezterm mpv
+stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr qt6ct menus noctalia xdg
 
 sudo stow --no-folding -t / -d "$HOME/dotfiles" fan2go scx_loader
 
@@ -237,10 +195,6 @@ sh -c "$(curl -sS https://vencord.dev/install.sh)"
 sudo chmod a+wr /opt/spotify
 sudo chmod a+wr /opt/spotify/Apps -R
 spicetify backup apply
-
-curl -L -o SLSsteam.tar.gz https://github.com/AceSLS/SLSsteam/releases/latest/download/SLSsteam-Arch.pkg.tar.zst
-sudo pacman -U --noconfirm SLSsteam.tar.gz
-rm SLSsteam.tar.gz
 
 yay -S informant
 
