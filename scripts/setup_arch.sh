@@ -18,6 +18,7 @@ nwg-look
 qt6ct-kde
 wlsunset
 xdg-desktop-portal-gtk
+xdg-desktop-portal-hyprland
 )
 
 ARCH_PACKAGES=(
