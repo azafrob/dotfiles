@@ -12,6 +12,7 @@ fi
 HYPRLAND_PACKAGES=(
 adw-gtk-theme
 hyprpolkitagent
+hypridle
 journalctl-desktop-notification
 noctalia-shell
 nwg-look
