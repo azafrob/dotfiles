@@ -77,7 +77,8 @@ spicetify-cli
 spotify
 steam
 stow
-sunshine
+sunshine-beta-bin
+terminus-font
 tldr
 trash-cli
 tree
@@ -109,7 +110,7 @@ if ! grep -q "^\[chaotic-aur\]" /etc/pacman.conf; then
 fi
 
 echo "=== Installing packages ==="
-sudo pacman -S --needed git base-devel reflector
+sudo pacman -Sy --needed --noconfirm git base-devel reflector
 git clone https://aur.archlinux.org/yay.git /tmp/yay
 cd /tmp/yay
 makepkg -si --noconfirm
@@ -189,12 +190,6 @@ sudo limine-mkinitcpio
 
 echo "=== Post-setup ==="
 zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh) --branch release-v1 --keep
-
-sh -c "$(curl -sS https://vencord.dev/install.sh)"
-
-sudo chmod a+wr /opt/spotify
-sudo chmod a+wr /opt/spotify/Apps -R
-spicetify backup apply
 
 yay -S informant
 
