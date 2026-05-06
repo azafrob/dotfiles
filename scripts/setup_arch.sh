@@ -31,7 +31,6 @@ bibata-cursor-theme
 boxflat-git
 btop
 calibre
-cava
 cliphist
 ddcutil
 discord
@@ -44,6 +43,7 @@ fd
 feh
 flatpak
 fuse2
+fuse3
 fzf
 gamescope
 getnf
@@ -144,8 +144,6 @@ gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 rm "$HOME/.config/kwalletrc"
 echo -e "[Wallet]\nEnabled=false" >> ~/.config/kwalletrc
-
-sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
 
 if grep -q "^FONT=" /etc/vconsole.conf; then
 	sudo sed -i "s/^FONT=.*/FONT=ter-v32n/" /etc/vconsole.conf
