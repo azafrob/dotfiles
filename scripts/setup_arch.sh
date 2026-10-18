@@ -28,14 +28,10 @@ atool
 atuin
 bat
 bibata-cursor-theme
-boxflat-git
 btop
-calibre
 cliphist
 ddcutil
-discord
 downgrade
-easyeffects
 eza
 fan2go-git
 fastfetch
@@ -47,57 +43,57 @@ fuse3
 fzf
 gamescope
 getnf
+github-cli
 jq
 lact
-lazygit
 less
 linux-zen
 linux-zen-headers
 limine-mkinitcpio-hook
 limine-snapper-sync
-localsend
+llvm
 luarocks
-ludusavi
 man-db
 mangohud
+meson
 mpv
 neovim
 okular
 papirus-icon-theme
 peazip
 power-profiles-daemon
-protonplus
-protontricks
-rclone
+python-mako
 rocm-smi-lib
-rsync
 scx-scheds
 scx-tools
-spicetify-cli
-spotify
 steam
 stow
-sunshine-beta-bin
 terminus-font
 tldr
 trash-cli
 tree
 tree-sitter-cli
-ufw
 veracrypt
-wezterm
+wezterm-git
 wgcf
 yad
 yazi
-zen-browser-bin
 zenergy-dkms-git
 zoxide
 zsh
 )
 
 FLATPAK_PACKAGES=(
+app.zen_browser.zen
+com.discordapp.Discord
+com.github.mtkennerly.ludusavi
 com.github.tchx84.Flatseal
+com.github.wwmm.easyeffects
+com.spotify.Client
+com.vysp3r.ProtonPlus
+io.github.lawstorant.boxflat
 it.mijorus.gearlever
+org.localsend.localsend_app
 )
 
 echo "=== Adding Chaotic-AUR repo ==="
@@ -120,7 +116,7 @@ rm -rf /tmp/yay
 sudo reflector --latest 20 --fastest 10 --sort rate --protocol https --save /etc/pacman.d/mirrorlist
 
 yay -Syu --needed --noconfirm "${ARCH_PACKAGES[@]}"
-yay -Syu --needed --noconfirm "${HYPRLAND_PACKAGES[@]}"
+# yay -Syu --needed --noconfirm "${HYPRLAND_PACKAGES[@]}"
 
 flatpak install --or-update -y "${FLATPAK_PACKAGES[@]}"
 
@@ -136,12 +132,13 @@ else
     echo "Warning: No wired network connection found, skipping Wake-on-LAN setup"
 fi
 
-echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c31c", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/69-remapper.rules
+echo 'KERNEL=="hidraw*", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c529", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/69-remapper.rules
+sudo tee /etc/udev/rules.d/99-boxflat.rules <<< 'SUBSYSTEM=="tty", KERNEL=="ttyACM*", ATTRS{idVendor}=="346e", ACTION=="add", MODE="0666", TAG+="uaccess"'
 
 chsh -s /usr/bin/zsh
 
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+# gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+# gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 rm "$HOME/.config/kwalletrc"
 echo -e "[Wallet]\nEnabled=false" >> ~/.config/kwalletrc
@@ -176,10 +173,11 @@ if [ -f "$HOME/.config/hypr/hyprland.conf" ] && [ ! -L "$HOME/.config/hypr/hyprl
 fi
 
 echo "=== Running stow for user config ==="
-stow --no-folding -t "$HOME" -d "$HOME/dotfiles" mangohud sunshine frogminer btop yazi bat zsh nvim wezterm mpv
-stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr qt6ct menus noctalia xdg
+stow --no-folding -t "$HOME" -d "$HOME/dotfiles" mangohud bat zsh nvim wezterm mpv btop
+# stow --no-folding -t "$HOME" -d "$HOME/dotfiles" hypr qt6ct menus noctalia xdg yazi
 
-sudo stow --no-folding -t / -d "$HOME/dotfiles" fan2go scx_loader
+sudo mkdir -p /etc/fan2go/ && sudo cp "$HOME/dotfiles/fan2go/etc/fan2go/fan2go.yaml" /etc/fan2go/
+sudo stow --no-folding -t / -d "$HOME/dotfiles" scx_loader
 
 echo "=== Running user commands ==="
 tldr --update

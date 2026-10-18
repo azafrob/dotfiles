@@ -177,3 +177,6 @@ zle -N zle-line-init
 echo -ne '\e[6 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[6 q' ;} # Use beam shape cursor for each new prompt.
 export KEYTIMEOUT=1
+
+# Pi
+export PATH="/home/azr/.pi/agent/bin:$PATH"
